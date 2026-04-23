@@ -1,0 +1,119 @@
+/* Inherited Styles from Dashboard */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background-color: #0a0a0a; color: #e0e0e0; }
+.dashboard-container { display: flex; min-height: 100vh; }
+
+.sidebar { width: 240px; background-color: #111; border-right: 1px solid #222; padding: 30px 20px; }
+.logo { font-size: 1.5rem; font-weight: bold; margin-bottom: 40px; color: #fff; }
+.logo span { color: #666; font-size: 0.9rem; }
+nav a { display: block; color: #888; text-decoration: none; padding: 12px 15px; border-radius: 6px; margin-bottom: 5px; }
+nav a.active { background: #222; color: #fff; }
+
+.content { flex: 1; padding: 40px; max-width: 1000px; }
+.content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.back-link { color: #888; text-decoration: none; font-size: 0.9rem; }
+
+/* Form Layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    background: #141414;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #222;
+}
+
+.full-width { grid-column: span 2; }
+
+.form-section h3 {
+    font-size: 1.1rem;
+    color: #fff;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+/* Input Styling */
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #aaa;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.input-group input, 
+.input-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #fff;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.input-group input:focus, 
+.input-group textarea:focus {
+    border-color: #555;
+}
+
+/* Color Picker */
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+input[type="color"] {
+    width: 50px;
+    height: 40px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+/* Genre Checkboxes */
+.genre-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.checkbox-container {
+    font-size: 0.85rem;
+    color: #ccc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Form Actions */
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+.save-btn {
+    background: #fff;
+    color: #000;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.reset-btn {
+    background: transparent;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    padding: 15px 30px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.save-btn:hover { background: #ddd; }

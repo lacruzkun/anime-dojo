@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmquest | Streaming UI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+    <script src="{{ url_for('static', filename='htmx/htmx.min.js') }}"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Filmquest</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Movies</a>
+            <a href="#">Series</a>
+        </nav>
+        <div class="user-options">EN ▾</div>
+    </header>
+
+    <section class="hero" style="background-image: url('{{ anime['cover_image'] }}')">
+        <div class="hero-content">
+            <h1>Unlimited Entertainment,<br>Movies, Series, & More.</h1>
+            <div class="meta">
+                <span class="badge">16+</span>
+                <span>Action, Drama</span>
+                <span>2023</span>
+            </div>
+            <button class="btn-primary">Watch Now</button>
+        </div>
+    </section>
+
+    <main>
+        <section class="category">
+            <div class="category-header">
+                <h2>Trending Now</h2>
+                <div class="tabs">
+                    <span class="active">Movies</span>
+                    <span>Series</span>
+                </div>
+            </div>
+            <div class="grid" hx-get="{{ url_for("home_anime") }}" hx-trigger="load">
+            </div>
+        </section>
+
+        <section class="category">
+            <h2>Recently Updated</h2>
+            <div class="grid">
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

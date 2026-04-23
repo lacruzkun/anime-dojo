@@ -1,0 +1,9 @@
+{% for result in results %}
+<div class="card">
+    <img src="{{ result['cover_image'] }}" alt="Poster">
+    <div class="card-info">
+        <h3>{{ result['english_title'] }}</h3>
+        <p>{{ result['year'] }} • HD</p>
+    </div>
+</div>
+{% endfor %}

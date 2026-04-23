@@ -1,0 +1,139 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #0a0a0a;
+    color: #e0e0e0;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background-color: #111;
+    border-right: 1px solid #222;
+    padding: 30px 20px;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #fff;
+}
+
+.logo span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+nav a {
+    display: block;
+    color: #888;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+}
+
+nav a.active, nav a:hover {
+    background: #222;
+    color: #fff;
+}
+
+/* Main Content Area */
+.content {
+    flex: 1;
+    padding: 40px;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+h1 { font-size: 1.8rem; }
+
+/* Add Button */
+.add-btn {
+    background-color: #fff;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.add-btn:hover { background-color: #ccc; }
+
+/* Table Styling */
+.table-wrapper {
+    background: #141414;
+    border-radius: 8px;
+    border: 1px solid #222;
+    overflow: hidden;
+}
+
+.series-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.series-table th, .series-table td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #222;
+}
+
+.series-table th {
+    background: #1a1a1a;
+    color: #666;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.table-img {
+    border-radius: 4px;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.published { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+.draft { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
+
+/* Actions */
+.edit-link, .delete-link {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-right: 10px;
+}
+
+.edit-link { color: #3498db; }
+.delete-link { color: #e74c3c; }
+
+.series-table tr:hover {
+    background-color: #1c1c1c;
+}

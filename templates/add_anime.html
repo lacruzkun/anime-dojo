@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmquest Admin | Add New Series</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='add_anime.css') }}">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">Filmquest <span>Admin</span></div>
+            <nav>
+                <a href="{{ url_for('database') }}">Series List</a>
+                <a href="#" class="active">Add New Series</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="content-header">
+                <h1>Add New Series</h1>
+                <a href="{{ url_for('database') }}" class="back-link">Cancel & Return</a>
+            </header>
+
+            <form class="add-series-form" method="POST">
+                <div class="form-grid">
+                    
+                    <div class="form-section full-width">
+                        <h3>General Information</h3>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="id">Series ID (Primary Key)</label>
+                        <input type="number" id="id" name="id" placeholder="e.g. 101" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="color">Theme Color (Hex)</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="color" name="color" value="#e74c3c">
+                            <span>Pick a brand color</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="english_title">English Title</label>
+                        <input type="text" id="english_title" name="english_title" placeholder="Enter English name" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="japanese_title">Japanese Title (Romaji)</label>
+                        <input type="text" id="japanese_title" name="japanese_title" placeholder="Enter Romaji name">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="native_title">Native Title (Kanji/Kana)</label>
+                        <input type="text" id="native_title" name="native_title" placeholder="Enter Native name">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cover_image">Cover Image URL</label>
+                        <input type="url" id="cover_image" name="cover_image" placeholder="https://image-link.com/poster.jpg">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="large_cover_image">Large Cover Image URL</label>
+                        <input type="url" id="large_cover_image" name="large_cover_image" placeholder="https://image-link.com/poster.jpg">
+                    </div>
+
+                    <div class="form-section full-width">
+                        <h3>Technical Details & Stats</h3>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="year">Release Year</label>
+                        <input type="number" id="year" name="year" placeholder="2024">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="score">Score (1-100)</label>
+                        <input type="number" id="score" name="score" min="0" max="100" placeholder="85">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="episodes">No. of Episodes</label>
+                        <input type="number" id="episodes" name="episodes" placeholder="24">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Genres (List of Strings)</label>
+                        <div class="genre-grid">
+                            {% for genre in genres %}
+                                <label class="checkbox-container">{{ genre["name"] }}
+                                    <input type="checkbox" name="genre" value="{{ genre['id'] }}">
+                                    <span class="checkmark"></span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label for="description">Description / Synopsis</label>
+                        <textarea id="description" name="description" rows="5" placeholder="Write a brief summary of the series..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Save Series to Database</button>
+                    <button type="reset" class="reset-btn">Clear All</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+</body>
+</html>

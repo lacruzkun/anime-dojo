@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmquest Admin | Manage Series</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='database.css') }}">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">Filmquest <span>Admin</span></div>
+            <nav>
+                <a href="#" class="active">Series List</a>
+                <a href="{{ url_for('add_anime') }}">Add New Series</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="content-header">
+                <h1>Manage Series</h1>
+                <a href="{{ url_for('add_anime') }}">
+                <button class="add-btn">+ Add New Series</button>
+                </a>
+            </header>
+
+            <section class="table-wrapper">
+                <table class="series-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Poster</th>
+                            <th>Title</th>
+                            <th>Release Year</th>
+                            <th>Genre</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in entries %}
+                        <tr>
+                            <td>{{ entry["id"] }}</td>
+                            <td><img src="{{ entry['cover_image'] }}" alt="Poster" class="table-img"></td>
+                            <td><strong>{{ entry["english_title"] if entry["english_title"] else entry["japanese_title"] }}</strong></td>
+                            <td>{{ entry["year"] }}</td>
+                            <td>{% for genre in entry["genres"] %}
+                                {{ genre }},
+                                {% endfor %}</td>
+                            <td><span class="status-badge published">Published</span></td>
+                            <td>
+                                <button class="edit-link">Edit</button>
+                                <button class="delete-link">Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>
