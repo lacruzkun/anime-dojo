@@ -1,0 +1,271 @@
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #080808;
+    color: #fff;
+    line-height: 1.6;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 5%;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+}
+
+.logo { font-size: 1.5rem; font-weight: 800; color: #fff; }
+nav a { color: #ccc; text-decoration: none; margin-left: 20px; font-size: 0.9rem; transition: 0.3s; }
+nav a:hover { color: #fff; }
+
+/* Banner Section */
+.anime-banner {
+    position: relative;
+    height: 70vh;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 5% 50px 5%;
+    overflow: hidden;
+}
+
+.banner-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center 20%;
+    filter: blur(5px) brightness(0.4);
+    transform: scale(1.1);
+    z-index: -2;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, #080808, transparent 70%);
+    z-index: -1;
+}
+
+.banner-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-end;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.poster img {
+    width: 230px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.info h1 { font-size: 3.5rem; line-height: 1.1; margin: 10px 0; }
+.alt-titles { color: #888; font-weight: 400; margin-bottom: 20px; }
+
+.meta-tags { display: flex; gap: 15px; color: var(--accent-color); font-weight: bold; }
+.genre-pill {
+    background: rgba(255,255,255,0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-right: 8px;
+}
+
+/* Actions */
+.actions { margin-top: 30px; display: flex; gap: 15px; }
+.play-btn {
+    background: var(--accent-color);
+    color: #fff;
+    padding: 12px 35px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.list-btn {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    padding: 12px 35px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+}
+
+/* Main Content Area */
+.details-container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 60px;
+    padding: 50px 5%;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.synopsis h2 { margin-bottom: 20px; font-size: 1.5rem; }
+.synopsis p { color: #bbb; font-size: 1.1rem; }
+
+/* Episodes List */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.episodes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.ep-card {
+    display: flex;
+    gap: 15px;
+    background: #121212;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.ep-card:hover { background: #1a1a1a; }
+
+.ep-thumb { position: relative; width: 140px; }
+.ep-thumb img { width: 100%; border-radius: 4px; }
+.play-icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.ep-card:hover .play-icon { opacity: 1; }
+
+.ep-num { display: block; color: var(--accent-color); font-size: 0.8rem; font-weight: bold; }
+.ep-title { font-weight: 500; font-size: 0.95rem; }
+
+/* Custom Scrollbar */
+.episodes-list::-webkit-scrollbar { width: 6px; }
+.episodes-list::-webkit-scrollbar-track { background: #080808; }
+.episodes-list::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    /* Adjust Header */
+    .navbar {
+        padding: 15px 5%;
+    }
+    
+    nav {
+        display: none; /* Hide desktop nav or replace with a burger menu */
+    }
+
+    /* Stack Banner Content */
+    .anime-banner {
+        height: auto;
+        padding-top: 100px; /* Space for navbar */
+        padding-bottom: 30px;
+    }
+
+    .banner-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .poster img {
+        width: 180px; /* Smaller poster for mobile */
+    }
+
+    .info h1 {
+        font-size: 2.2rem; /* Scale down title */
+    }
+
+    .meta-tags {
+        justify-content: center;
+        font-size: 0.85rem;
+    }
+
+    .genre-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .play-btn, .list-btn {
+        width: 100%;
+        padding: 15px;
+    }
+
+    /* Stack Main Content Columns */
+    .details-container {
+        grid-template-columns: 1fr; /* Single column */
+        gap: 40px;
+        padding: 30px 5%;
+    }
+
+    .left-col, .right-col {
+        width: 100%;
+    }
+
+    /* Adjust Episode Cards */
+    .ep-thumb {
+        width: 110px; /* Smaller thumbnails */
+    }
+
+    .ep-title {
+        font-size: 0.85rem;
+    }
+
+    .episodes-list {
+        max-height: none; /* Allow natural scrolling on mobile */
+        overflow-y: visible;
+    }
+
+    /* Banner Background Adjustment */
+    .banner-bg {
+        filter: blur(8px) brightness(0.3); /* Heavier blur for better text contrast on small screens */
+    }
+}
+
+/* Extra Small Devices (Phones) */
+@media (max-width: 480px) {
+    .info h1 {
+        font-size: 1.8rem;
+    }
+    
+    .ep-card {
+        flex-direction: column; /* Stack thumbnail and info for very small screens */
+    }
+    
+    .ep-thumb {
+        width: 100%;
+    }
+    
+    .ep-thumb img {
+        height: 180px;
+        object-fit: cover;
+    }
+}

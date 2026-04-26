@@ -40,7 +40,18 @@
                     <span>Series</span>
                 </div>
             </div>
-            <div class="grid" hx-get="{{ url_for("home_anime") }}" hx-trigger="load">
+            <div class="grid" >
+                {% for result in results[:20] %}
+                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}">
+                    <div class="card">
+                        <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
+                        <div class="card-info">
+                            <h3>{{ result['english_title'] }}</h3>
+                            <p>{{ result['year'] }} • HD</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
             </div>
         </section>
 

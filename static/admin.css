@@ -108,7 +108,8 @@ h1 { font-size: 1.8rem; }
 }
 
 .table-img {
-    border-radius: 4px;
+    border-radius: 12px;
+    width: 80%;
 }
 
 /* Status Badges */

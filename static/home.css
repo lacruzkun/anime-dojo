@@ -105,6 +105,16 @@ main {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 20px;
 }
+.grid {
+    a,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active {
+      text-decoration: none;
+      color: inherit;
+    }
+}
 
 .card img {
     width: 100%;

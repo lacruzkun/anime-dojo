@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filmquest Admin | Add New Series</title>
+    <title>Filmquest Admin | Import Series</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='add_anime.css') }}">
 </head>
 <body>
@@ -12,105 +12,75 @@
         <aside class="sidebar">
             <div class="logo">Filmquest <span>Admin</span></div>
             <nav>
-                <a href="{{ url_for('database') }}">Series List</a>
-                <a href="#" class="active">Add New Series</a>
+                <a href="{{ url_for('admin') }}">Series List</a>
+                <a href="#" class="active">Import New Series</a>
             </nav>
         </aside>
 
         <main class="content">
             <header class="content-header">
-                <h1>Add New Series</h1>
-                <a href="{{ url_for('database') }}" class="back-link">Cancel & Return</a>
+                <h1>Import Series</h1>
+                <p>Enter an ID to fetch metadata automatically.</p>
             </header>
 
-            <form class="add-series-form" method="POST">
-                <div class="form-grid">
-                    
-                    <div class="form-section full-width">
-                        <h3>General Information</h3>
-                    </div>
+            <form method="POST" action="{{ url_for('fetch_preview') }}" class="search-section">
+                <div class="search-box">
+                    <input type="number" name="id" placeholder="Enter Series ID (e.g. 1535)" value="{{ anime_data.id if anime_data else '' }}" required>
+                    <button type="submit" class="fetch-btn">Fetch Data</button>
+                </div>
+            </form>
 
-                    <div class="input-group">
-                        <label for="id">Series ID (Primary Key)</label>
-                        <input type="number" id="id" name="id" placeholder="e.g. 101" required>
+            {% if anime_data %}
+            <div class="preview-container">
+                <div class="preview-card">
+                    <div class="preview-image">
+                        <img src="{{ anime_data.coverImage.large }}" alt="Cover Preview">
                     </div>
-
-                    <div class="input-group">
-                        <label for="color">Theme Color (Hex)</label>
-                        <div class="color-picker-wrapper">
-                            <input type="color" id="color" name="color" value="#e74c3c">
-                            <span>Pick a brand color</span>
+                    <div class="preview-details">
+                        <span class="preview-badge" style="background: {{ anime_data.coverImage.color }}">Preview</span>
+                        <h2>{{ anime_data.title.english }}</h2>
+                        <p class="japanese-titles">{{ anime_data.title.japanese }} • {{ anime_data.title.native }}</p>
+                        
+                        <div class="preview-stats">
+                            <span><strong>Year:</strong> {{ anime_data.seasonYear }}</span>
+                            <span><strong>Score:</strong> {{ anime_data.averageScore }} /100</span>
+                            <span><strong>Episodes:</strong> {{ anime_data.episodes }}</span>
                         </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="english_title">English Title</label>
-                        <input type="text" id="english_title" name="english_title" placeholder="Enter English name" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="japanese_title">Japanese Title (Romaji)</label>
-                        <input type="text" id="japanese_title" name="japanese_title" placeholder="Enter Romaji name">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="native_title">Native Title (Kanji/Kana)</label>
-                        <input type="text" id="native_title" name="native_title" placeholder="Enter Native name">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="cover_image">Cover Image URL</label>
-                        <input type="url" id="cover_image" name="cover_image" placeholder="https://image-link.com/poster.jpg">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="large_cover_image">Large Cover Image URL</label>
-                        <input type="url" id="large_cover_image" name="large_cover_image" placeholder="https://image-link.com/poster.jpg">
-                    </div>
-
-                    <div class="form-section full-width">
-                        <h3>Technical Details & Stats</h3>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="year">Release Year</label>
-                        <input type="number" id="year" name="year" placeholder="2024">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="score">Score (1-100)</label>
-                        <input type="number" id="score" name="score" min="0" max="100" placeholder="85">
-                    </div>
-
-                    <div class="input-group">
-                        <label for="episodes">No. of Episodes</label>
-                        <input type="number" id="episodes" name="episodes" placeholder="24">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Genres (List of Strings)</label>
-                        <div class="genre-grid">
-                            {% for genre in genres %}
-                                <label class="checkbox-container">{{ genre["name"] }}
-                                    <input type="checkbox" name="genre" value="{{ genre['id'] }}">
-                                    <span class="checkmark"></span>
-                                </label>
+                        
+                        <p class="preview-description">{{ anime_data.description[:200] }}...</p>
+                        
+                        <div class="preview-genres">
+                            {% for g in anime_data.genres %}
+                                <span class="tag">{{ g }}</span>
                             {% endfor %}
                         </div>
                     </div>
+                </div>
 
-                    <div class="input-group full-width">
-                        <label for="description">Description / Synopsis</label>
-                        <textarea id="description" name="description" rows="5" placeholder="Write a brief summary of the series..."></textarea>
+                <form method="POST" action="{{ url_for('save_series') }}">
+                    <input type="hidden" name="id" value="{{ anime_data.id }}">
+                    <input type="hidden" name="english_title" value="{{ anime_data.title.english }}">
+                    <input type="hidden" name="japanese_title" value="{{ anime_data.title.japanese }}">
+                    <input type="hidden" name="native_title" value="{{ anime_data.title.native }}">
+                    <input type="hidden" name="color" value="{{ anime_data.coverImage.color }}">
+                    <input type="hidden" name="cover_image" value="{{ anime_data.coverImage.large }}">
+                    <input type="hidden" name="large_cover_image" value="{{ anime_data.coverImage.extraLarge }}">
+                    <input type="hidden" name="year" value="{{ anime_data.seasonYear }}">
+                    <input type="hidden" name="score" value="{{ anime_data.averageScore }}">
+                    <input type="hidden" name="epidoses" value="{{ anime_data.episodes }}">
+                    <input type="hidden" name="description" value="{{ anime_data.description }}">
+                    <input type="hidden" name="genre" value="{{ anime_data.genres }}">
+                    <div class="form-actions">
+                        <button type="submit" class="save-btn">Confirm & Save to Database</button>
+                        <a href="{{ url_for('add_anime') }}" >
+                            <button class="reset-link">
+                                Discard
+                            </button>
+                        </a>
                     </div>
-
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="save-btn">Save Series to Database</button>
-                    <button type="reset" class="reset-btn">Clear All</button>
-                </div>
-            </form>
+                </form>
+            </div>
+            {% endif %}
         </main>
     </div>
 

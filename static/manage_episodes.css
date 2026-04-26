@@ -1,0 +1,118 @@
+/* Inherits sidebar and base styles from admin_dashboard.css */
+
+.header-titles h1 span {
+    color: #888;
+    font-weight: 400;
+    font-size: 1.2rem;
+}
+
+.back-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Series Summary Card */
+.series-summary-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #111;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #222;
+    margin-bottom: 30px;
+}
+
+.summary-poster {
+    width: 60px;
+    height: 85px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* Status Toggles */
+.status-toggle {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.status-toggle.active {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.status-toggle.pending {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+.status-toggle:hover {
+    filter: brightness(1.2);
+}
+
+/* Table Specifics */
+.table-thumb {
+    width: 100px;
+    height: 56px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.url-cell {
+    color: #555;
+    font-family: monospace;
+    font-size: 0.8rem;
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none; /* Controlled by JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #181818;
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #333;
+}
+
+.modal-content h3 { margin-bottom: 25px; }
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.primary-btn {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}

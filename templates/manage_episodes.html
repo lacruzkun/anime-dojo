@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Episodes | {{ anime.english_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='manage_episodes.css') }}">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">Filmquest <span>Admin</span></div>
+            <nav>
+                <a href="{{ url_for('admin') }}">Series List</a>
+                <a href="{{ url_for('add_anime') }}">Add New Series</a>
+                <a href="#" class="active">Manage Episodes</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="content-header">
+                <div class="header-titles">
+                    <a href="{{ url_for('admin') }}" class="back-link">← Back to Database</a>
+                    <h1>Manage Episodes: <span>{{ anime.english_title }}</span></h1>
+                </div>
+                <button class="primary-btn" onclick="toggleModal()">+ Upload New Episode</button>
+            </header>
+
+            <section class="series-summary-card">
+                <img src="{{ anime.cover_image }}" alt="Poster" class="summary-poster">
+                <div class="summary-info">
+                    <p><strong>Total Episodes:</strong> {{ episodes|length }} / {{ anime.no_of_episodes }}</p>
+                    <p><strong>Status:</strong> <span class="status-badge published">Active</span></p>
+                </div>
+            </section>
+
+            <section class="table-wrapper">
+                <table class="episodes-table">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Thumbnail</th>
+                            <th>Episode Title</th>
+                            <th>Status</th>
+                            <th>Video Link</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ep in episodes %}
+                        <tr>
+                            <td><strong>{{ ep.episode_number }}</strong></td>
+                            <td><img src="{{ ep.thumbnail }}" class="table-thumb"></td>
+                            <td>{{ ep.title }}</td>
+                            <td>
+                                <!--<form method="POST" action="{{ url_for('toggle_episode_status', id=ep.id) }}">-->
+                                <form>
+                                    <button type="submit" class="status-toggle {{ 'active' if ep.is_uploaded else 'pending' }}">
+                                        {{ 'Uploaded' if ep.is_uploaded else 'Not Uploaded' }}
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="url-cell">{{ ep.video_url[:30] }}...</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="edit-btn">Edit</button>
+                                    <button class="delete-btn">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <h3>Upload New Episode</h3>
+            <!--<form method="POST" action="{{ url_for('upload_episode', anime_id=anime.id) }}">-->
+            <form>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Episode Number</label>
+                        <input type="number" name="episode_number" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Episode Title</label>
+                        <input type="text" name="title" placeholder="e.g. The Beginning" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Thumbnail URL</label>
+                    <input type="url" name="thumbnail" placeholder="https://...">
+                </div>
+                <div class="input-group">
+                    <label>Video URL / File Path</label>
+                    <input type="text" name="video_url" placeholder="Direct link to video source" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" onclick="toggleModal()">Cancel</button>
+                    <button type="submit" class="save-btn">Upload Episode</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal() {
+            const modal = document.getElementById('uploadModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+    </script>
+
+</body>
+</html>
