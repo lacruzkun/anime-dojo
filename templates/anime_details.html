@@ -6,7 +6,7 @@
     <title>{{ anime.english_title }} | Filmquest</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='anime_details.css') }}">
 </head>
-<body>
+<body style="--accent-color: {{ anime.color }};">
 
     <header class="navbar">
         <div class="logo">Filmquest</div>
@@ -15,9 +15,12 @@
             <a href="/movies">Movies</a>
             <a href="/series">Series</a>
         </nav>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search anime...">
+        </div>
     </header>
 
-    <section class="anime-banner" style="--accent-color: {{ anime.color }};">
+    <section class="anime-banner" >
         <div class="banner-bg" style="background-image: url('{{ anime.large_cover_image }}');"></div>
         <div class="banner-overlay"></div>
         
@@ -35,9 +38,11 @@
                 <h3 class="alt-titles">{{ anime.japanese_title }} | {{ anime.native_title }}</h3>
                 
                 <div class="genre-list">
-                    {% for genre in anime.genres %}
-                        <span class="genre-pill">{{ genre }}</span>
-                    {% endfor %}
+                    {% if genres %}
+                        {% for genre in genres %}
+                            <span class="genre-pill">{{ genre.name }}</span>
+                        {% endfor %}
+                    {% endif %}
                 </div>
 
                 <div class="actions">
@@ -63,21 +68,23 @@
                     <span class="ep-total">Total: {{ anime.no_of_episodes }}</span>
                 </div>
                 
-                <div class="episodes-list">
-                    {% for i in range(1, 13) %}
-                    <div class="ep-card">
-                        <div class="ep-thumb">
-                            <img src="https://via.placeholder.com/160x90" alt="Episode {{ i }}">
-                            <span class="play-icon">▶</span>
-                        </div>
-                        <div class="ep-info">
-                            <span class="ep-num">Episode {{ i }}</span>
-                            <span class="ep-title">The Journey Begins</span>
-                        </div>
+            <div class="episodes-list">
+                {% for i in range(1, 13) %}
+                <label class="ep-card" for="ep-{{ i }}">
+                    
+                    <div class="ep-select">
+                        <input type="checkbox" class="ep-checkbox" id="ep-{{ i }}">
                     </div>
-                    {% endfor %}
-                </div>
-            </section>
+
+                    <div class="ep-info">
+                        <span class="ep-num">Episode {{ i }}</span>
+                        <span class="ep-title">The Journey Begins</span>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+
+            <button class="download-btn">Download Selected</button></section>
         </div>
     </main>
 

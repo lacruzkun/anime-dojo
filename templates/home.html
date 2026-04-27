@@ -7,28 +7,33 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
     <script src="{{ url_for('static', filename='htmx/htmx.min.js') }}"></script>
 </head>
-<body>
+<body style="--accent-color: {{ anime.color }}; --bg-path: {{ anime['cover_image'] }};">
 
-    <header>
+    <header class="navbar">
         <div class="logo">Filmquest</div>
         <nav>
             <a href="#">Home</a>
             <a href="#">Movies</a>
             <a href="#">Series</a>
         </nav>
-        <div class="user-options">EN ▾</div>
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search anime...">
+        </div>
     </header>
 
-    <section class="hero" style="background-image: url('{{ anime['cover_image'] }}')">
-        <div class="hero-content">
-            <h1>Unlimited Entertainment,<br>Movies, Series, & More.</h1>
-            <div class="meta">
-                <span class="badge">16+</span>
-                <span>Action, Drama</span>
-                <span>2023</span>
+    <section class="hero-container">
+        {% for slide in slides[:4] %}
+        <div class="hero-slide" style="background-image: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url('{{ slide.large_cover_image }}')">
+            <div class="hero-content">
+                <h1>{{ slide.english_title if slide.english_title else slide.japanese_title }}</h1>
+                <div class="meta">
+                    <span class="badge">HD</span>
+                    <span class="year">{{ slide.year }}</span>
+                </div>
+                <a href="{{ url_for('anime_detail', anime_id=slide['id']) }}" class="btn-primary">Watch Now</a>
             </div>
-            <button class="btn-primary">Watch Now</button>
         </div>
+        {% endfor %}
     </section>
 
     <main>

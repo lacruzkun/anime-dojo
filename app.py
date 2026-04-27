@@ -42,10 +42,18 @@ ID_QUERY = """query ($id: Int){
 def home():
     conn = get_connection_db()
     anime = conn.execute("""SELECT * FROM anime""").fetchone()
+    genres = conn.execute("""
+          SELECT genres.name FROM genres 
+          JOIN anime_genre ON genres.id = anime_genre.genre_id 
+          WHERE anime_genre.anime_id = ?""", (anime["id"],)).fetchone()
+    slides = [conn.execute("""SELECT * FROM anime WHERE id = ?""", (11061,)).fetchone(),
+    conn.execute("""SELECT * FROM anime WHERE id = ?""", (11757,)).fetchone(),
+     conn.execute("""SELECT * FROM anime WHERE id = ?""", (20447,)).fetchone(),
+    conn.execute("""SELECT * FROM anime WHERE id = ?""", (21234,)).fetchone()]
     if request.method == "GET":
         results = conn.execute("""SELECT * FROM anime""").fetchall()
     conn.close()
-    return render_template("home.html", anime=anime, results=results)
+    return render_template("home.html", anime=anime, results=results, genres=genres, slides=slides)
 
 
 def get_connection_db():
@@ -70,6 +78,17 @@ def init_db():
             description STRING
          )"""
      )
+
+    conn.execute("""CREATE TABLE IF NOT EXISTS episode (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        anime_id INTEGER NOT NULL,
+        episode_number INTEGER NOT NULL,
+        file_path TEXT,
+        added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (anime_id) REFERENCES anime(id) ON DELETE CASCADE,
+        UNIQUE (anime_id, episode_number)
+    )"""
+    )
 
     conn.execute("""CREATE TABLE IF NOT EXISTS
         genres(
@@ -110,7 +129,10 @@ def admin():
     conn = get_connection_db()
     animes = conn.execute("""SELECT * FROM anime""").fetchall()
     for anime in animes:
-        genres = conn.execute("""SELECT genres.name FROM genres JOIN anime_genre ON genres.id = anime_genre.genre_id WHERE anime_genre.anime_id = ?""", (anime["id"],)).fetchall()
+        genres = conn.execute("""
+                  SELECT genres.name FROM genres 
+                  JOIN anime_genre ON genres.id = anime_genre.genre_id 
+                  WHERE anime_genre.anime_id = ?""", (anime["id"],)).fetchall()
         entry = dict(anime)
         entry["genres"] = []
         for genre in genres:
@@ -141,12 +163,16 @@ def get_anime_by_id(Id):
 
 @app.route("/admin/add/fetch", methods=["GET", "POST"])
 def fetch_preview():
+    if "admin" not in session:
+        return redirect(url_for("home"))
     series_id = request.form.get("id")
     anime_data = get_anime_by_id(series_id)
     return render_template("add_anime.html", anime_data=anime_data)
 
 @app.route("/admin/add/save", methods=["GET", "POST"])
 def save_series():
+    if "admin" not in session:
+        return redirect(url_for("home"))
     data = request.form.to_dict()
     print(data)
     id = request.form.get("id")
@@ -195,7 +221,9 @@ def save_series():
     return redirect(url_for("admin"))
 
 @app.route("/admin/anime/<int:anime_id>")
-def admin_anime_detail(anime_id):
+def manage_episode(anime_id):
+    if "admin" not in session:
+        return redirect(url_for("home"))
     conn = get_connection_db()
     anime = conn.execute("""SELECT * FROM anime WHERE id = ?""", (anime_id, )).fetchone()
     conn.close()
@@ -205,8 +233,9 @@ def admin_anime_detail(anime_id):
 def anime_detail(anime_id):
     conn = get_connection_db()
     anime = conn.execute("""SELECT * FROM anime WHERE id = ?""", (anime_id, )).fetchone()
+    genres = conn.execute("""SELECT genres.name FROM genres JOIN anime_genre ON genres.id = anime_genre.genre_id WHERE anime_genre.anime_id = ?""", (anime["id"],)).fetchall()
     conn.close()
-    return render_template("anime_details.html", anime=anime)
+    return render_template("anime_details.html", anime=anime, genres=genres)
 
 @app.route("/home_anime", methods=["GET", "POST"])
 def home_anime():
@@ -217,11 +246,11 @@ def home_anime():
 
     return render_template("home_anime.html", results=results)
 
-@app.route("/home_anime", methods=["GET", "POST"])
+@app.route("/admin/toggle_episode_status", methods=["GET", "POST"])
 def toggle_episode_status():
     return "OK"
 
-@app.route("/home_anime", methods=["GET", "POST"])
+@app.route("/admin/upload_episode", methods=["GET", "POST"])
 def upload_episode():
     return "OK"
 

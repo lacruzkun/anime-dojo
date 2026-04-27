@@ -33,23 +33,6 @@ nav a {
 
 nav a:hover { color: #fff; }
 
-/* Hero Section */
-.hero {
-    height: 80vh;
-    background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), 
-                url('https://via.placeholder.com/1200x600'); /* Replace with your image */
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    padding: 0 5%;
-}
-
-.hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-}
-
 .meta {
     margin-bottom: 20px;
     color: #aaa;
@@ -102,7 +85,7 @@ main {
 /* Grid & Cards */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
 }
 .grid {
@@ -134,4 +117,177 @@ main {
 .card-info p {
     font-size: 0.8rem;
     color: #888;
+}
+/* --- Search Bar Styles --- */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.search-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 200px;
+    backdrop-filter: blur(5px);
+}
+
+.search-bar::placeholder {
+    color: #aaa;
+}
+
+/* Glows with the dynamic accent color when clicked */
+.search-bar:focus {
+    border-color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accent-color), transparent 70%);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* NEW: Ensures logo, nav, and search align vertically */
+    padding: 20px 5%;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+}
+
+.logo { font-size: 1.5rem; font-weight: 800; color: #fff; }
+nav a { color: #ccc; text-decoration: none; margin-left: 20px; font-size: 0.9rem; transition: 0.3s; }
+
+/* Links glow with the accent color on hover */
+nav a:hover { color: var(--accent-color); }
+
+/* --- Banner Section --- */
+.anime-banner {
+    position: relative;
+    height: 70vh;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 5% 50px 5%;
+    overflow: hidden;
+}
+
+.banner-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center 20%;
+    filter: blur(5px) brightness(0.4);
+    transform: scale(1.1);
+    z-index: -2;
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, #080808, transparent 70%);
+    z-index: -1;
+}
+
+.banner-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-end;
+    max-width: 1200px;
+    width: 100%;
+}
+
+
+/* --- Mobile Optimization Update --- */
+@media (max-width: 768px) {
+    /* Since nav is hidden on mobile, we'll hide the search bar here too 
+       to keep the header clean, or you can adjust it to sit below the logo */
+
+    .navbar { padding: 15px 5%; }
+    nav { display: none; }
+}
+/* Container for the slides */
+.hero-container {
+    position: relative;
+    height: 80vh;
+    width: 100%;
+    overflow: hidden;
+    background-color: #000;
+}
+
+/* Individual Slide Base Styles */
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    padding: 0 5%;
+    opacity: 0; /* Hidden by default */
+    transition: transform 0.5s ease;
+    animation: heroFade 12s infinite; /* 4 slides * 3 seconds */
+}
+
+/* Animation Timings for 4 Slides */
+.hero-slide:nth-child(1) { animation-delay: 0s; }
+.hero-slide:nth-child(2) { animation-delay: 3s; }
+.hero-slide:nth-child(3) { animation-delay: 6s; }
+.hero-slide:nth-child(4) { animation-delay: 9s; }
+
+@keyframes heroFade {
+    0% { opacity: 0; 
+        visibility: hidden;
+        pointer-events: none;
+        z-index: 1;
+    }
+    5% { opacity: 1; 
+        visibility: visible;
+        pointer-events: auto;
+        z-index: 10;
+    } /* Fade in */
+    25% { opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        z-index: 10;
+    }                      /* Stay visible */
+    30% { opacity: 0; 
+        visibility: hidden;
+        pointer-events: none;
+        z-index: 1;
+    } /* Fade out */
+    100% { opacity: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+}
+
+/* Ensure content stays aligned */
+.hero-content {
+    max-width: 600px;
+    z-index: 5;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .hero-container { height: 50vh; }
+    .hero-content h1 { font-size: 2rem; }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 20px;
+    }
 }

@@ -38,10 +38,12 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
                         {% for entry in entries %}
-                        <tr>
-                            <td>{{ entry["id"] }}</td>
+                    <tbody>
+                        <tr onclick="window.location.href='{{ url_for('manage_episode', anime_id=entry['id']) }}'">
+                            <td>
+                                {{ entry["id"] }}
+                            </td>
                             <td><img loading="lazy" src="{{ entry['cover_image'] }}" alt="Poster" class="table-img"></td>
                             <td><strong>{{ entry["english_title"] if entry["english_title"] else entry["japanese_title"] }}</strong></td>
                             <td>{{ entry["year"] }}</td>
@@ -54,8 +56,8 @@
                                 <button class="delete-link">Delete</button>
                             </td>
                         </tr>
-                        {% endfor %}
                         </tbody>
+                        {% endfor %}
                 </table>
             </section>
         </main>

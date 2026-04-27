@@ -6,16 +6,63 @@
     font-family: 'Inter', sans-serif;
 }
 
-body {
-    background-color: #080808;
-    color: #fff;
-    line-height: 1.6;
+:root {
+    /* Fallback if variable is missing */
+    --accent-color: #e74c3c; 
+    /* Text color for elements sitting on the accent background */
+    --text-on-accent: #ffffff; 
 }
 
-/* Navbar */
+body {
+    /* Creates a deep, atmospheric hue based on the accent color */
+    background: radial-gradient(
+        circle at 50% -10%, 
+        color-mix(in srgb, var(--accent-color), black 80%) 0%, 
+        #050505 100%
+    );
+    background-attachment: fixed; /* Keeps the hue in place while scrolling */
+    color: #fff;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Optional: Add a very subtle mesh-like glow to the bottom corner */
+body::after {
+    content: "";
+    position: fixed;
+    bottom: -10%;
+    right: -5%;
+    width: 40%;
+    height: 40%;
+    background: radial-gradient(
+        circle, 
+        color-mix(in srgb, var(--accent-color), transparent 90%), 
+        transparent 70%
+    );
+    z-index: -1; /* Place it behind all content */
+    pointer-events: none;
+}
+/* --- Global Accent Enhancements --- */
+
+/* Text selection color matches the series theme */
+::selection {
+    background: var(--accent-color);
+    color: var(--text-on-accent);
+}
+
+/* Custom Scrollbar using the accent color */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #080808; }
+::-webkit-scrollbar-thumb { 
+    background: var(--accent-color); 
+    border-radius: 10px;
+}
+
+/* --- Navbar --- */
 .navbar {
     display: flex;
     justify-content: space-between;
+    align-items: center; /* NEW: Ensures logo, nav, and search align vertically */
     padding: 20px 5%;
     position: absolute;
     width: 100%;
@@ -25,9 +72,11 @@ body {
 
 .logo { font-size: 1.5rem; font-weight: 800; color: #fff; }
 nav a { color: #ccc; text-decoration: none; margin-left: 20px; font-size: 0.9rem; transition: 0.3s; }
-nav a:hover { color: #fff; }
 
-/* Banner Section */
+/* Links glow with the accent color on hover */
+nav a:hover { color: var(--accent-color); }
+
+/* --- Banner Section --- */
 .anime-banner {
     position: relative;
     height: 70vh;
@@ -72,25 +121,40 @@ nav a:hover { color: #fff; }
 .info h1 { font-size: 3.5rem; line-height: 1.1; margin: 10px 0; }
 .alt-titles { color: #888; font-weight: 400; margin-bottom: 20px; }
 
+/* Meta tags use the accent for branding */
 .meta-tags { display: flex; gap: 15px; color: var(--accent-color); font-weight: bold; }
+
 .genre-pill {
     background: rgba(255,255,255,0.1);
     padding: 5px 15px;
     border-radius: 20px;
     font-size: 0.8rem;
     margin-right: 8px;
+    border: 1px solid transparent;
+    transition: 0.3s;
 }
 
-/* Actions */
+.genre-pill:hover {
+    border-color: var(--accent-color);
+}
+
+/* --- Actions --- */
 .actions { margin-top: 30px; display: flex; gap: 15px; }
+
 .play-btn {
     background: var(--accent-color);
-    color: #fff;
+    color: var(--text-on-accent); /* Ensures text is readable on the accent */
     padding: 12px 35px;
     border: none;
     border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+}
+
+.play-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .list-btn {
@@ -103,7 +167,7 @@ nav a:hover { color: #fff; }
     backdrop-filter: blur(5px);
 }
 
-/* Main Content Area */
+/* --- Main Content Area --- */
 .details-container {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
@@ -113,10 +177,17 @@ nav a:hover { color: #fff; }
     margin: 0 auto;
 }
 
-.synopsis h2 { margin-bottom: 20px; font-size: 1.5rem; }
+/* Synopsis heading highlighted by the accent */
+.synopsis h2 { 
+    margin-bottom: 20px; 
+    font-size: 1.5rem; 
+    border-left: 4px solid var(--accent-color);
+    padding-left: 15px;
+}
+
 .synopsis p { color: #bbb; font-size: 1.1rem; }
 
-/* Episodes List */
+/* --- Episodes List --- */
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -141,18 +212,23 @@ nav a:hover { color: #fff; }
     border-radius: 8px;
     transition: 0.3s;
     cursor: pointer;
+    border-left: 0 solid var(--accent-color);
 }
 
-.ep-card:hover { background: #1a1a1a; }
+/* Hover adds a side indicator in the accent color */
+.ep-card:hover { 
+    background: #1a1a1a; 
+    border-left-width: 4px;
+}
 
-.ep-thumb { position: relative; width: 140px; }
-.ep-thumb img { width: 100%; border-radius: 4px; }
+
 .play-icon {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     opacity: 0;
     transition: 0.3s;
+    color: var(--accent-color);
 }
 
 .ep-card:hover .play-icon { opacity: 1; }
@@ -160,25 +236,14 @@ nav a:hover { color: #fff; }
 .ep-num { display: block; color: var(--accent-color); font-size: 0.8rem; font-weight: bold; }
 .ep-title { font-weight: 500; font-size: 0.95rem; }
 
-/* Custom Scrollbar */
-.episodes-list::-webkit-scrollbar { width: 6px; }
-.episodes-list::-webkit-scrollbar-track { background: #080808; }
-.episodes-list::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-/* Mobile Optimization */
+/* --- Mobile Optimization --- */
 @media (max-width: 768px) {
-    /* Adjust Header */
-    .navbar {
-        padding: 15px 5%;
-    }
-    
-    nav {
-        display: none; /* Hide desktop nav or replace with a burger menu */
-    }
+    .navbar { padding: 15px 5%; }
+    nav { display: none; }
 
-    /* Stack Banner Content */
     .anime-banner {
         height: auto;
-        padding-top: 100px; /* Space for navbar */
+        padding-top: 100px;
         padding-bottom: 30px;
     }
 
@@ -189,18 +254,9 @@ nav a:hover { color: #fff; }
         gap: 20px;
     }
 
-    .poster img {
-        width: 180px; /* Smaller poster for mobile */
-    }
-
-    .info h1 {
-        font-size: 2.2rem; /* Scale down title */
-    }
-
-    .meta-tags {
-        justify-content: center;
-        font-size: 0.85rem;
-    }
+    .poster img { width: 180px; }
+    .info h1 { font-size: 2.2rem; }
+    .meta-tags { justify-content: center; font-size: 0.85rem; }
 
     .genre-list {
         display: flex;
@@ -209,63 +265,142 @@ nav a:hover { color: #fff; }
         gap: 8px;
     }
 
-    .actions {
-        flex-direction: column;
-        width: 100%;
-    }
+    .actions { flex-direction: column; width: 100%; }
+    .play-btn, .list-btn { width: 100%; padding: 15px; }
 
-    .play-btn, .list-btn {
-        width: 100%;
-        padding: 15px;
-    }
-
-    /* Stack Main Content Columns */
     .details-container {
-        grid-template-columns: 1fr; /* Single column */
+        grid-template-columns: 1fr;
         gap: 40px;
         padding: 30px 5%;
     }
 
-    .left-col, .right-col {
-        width: 100%;
-    }
+    .left-col, .right-col { width: 100%; }
+    .ep-thumb { width: 110px; }
+    .ep-title { font-size: 0.85rem; }
+    .episodes-list { max-height: none; overflow-y: visible; }
 
-    /* Adjust Episode Cards */
-    .ep-thumb {
-        width: 110px; /* Smaller thumbnails */
-    }
-
-    .ep-title {
-        font-size: 0.85rem;
-    }
-
-    .episodes-list {
-        max-height: none; /* Allow natural scrolling on mobile */
-        overflow-y: visible;
-    }
-
-    /* Banner Background Adjustment */
-    .banner-bg {
-        filter: blur(8px) brightness(0.3); /* Heavier blur for better text contrast on small screens */
-    }
+    .banner-bg { filter: blur(8px) brightness(0.3); }
 }
 
-/* Extra Small Devices (Phones) */
 @media (max-width: 480px) {
-    .info h1 {
-        font-size: 1.8rem;
+    .info h1 { font-size: 1.8rem; }
+    .ep-card { flex-direction: column; }
+    .ep-thumb { width: 100%; }
+    .ep-thumb img { height: 180px; object-fit: cover; }
+}
+/* --- Episodes Checkbox & Alignment --- */
+.ep-card {
+    /* Existing styles are fine, but ensure vertical centering */
+    align-items: center; 
+}
+
+/* Container for the checkbox */
+.ep-select {
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+}
+
+/* Customizing the checkbox to match the theme */
+.ep-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover state for the checkbox */
+.ep-checkbox:hover {
+    border-color: var(--accent-color);
+}
+
+/* Checked state */
+.ep-checkbox:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* The checkmark icon inside the custom box */
+.ep-checkbox:checked::after {
+    content: "✔";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-on-accent);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* --- Download Button --- */
+.download-btn {
+    width: 100%;
+    background: var(--accent-color);
+    color: var(--text-on-accent);
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* --- Mobile Fix for Checkboxes --- */
+@media (max-width: 480px) {
+    .ep-select {
+        padding-bottom: 10px; /* Gives some spacing when stacked on very small screens */
     }
-    
-    .ep-card {
-        flex-direction: column; /* Stack thumbnail and info for very small screens */
-    }
-    
-    .ep-thumb {
-        width: 100%;
-    }
-    
-    .ep-thumb img {
-        height: 180px;
-        object-fit: cover;
-    }
+}
+/* --- Search Bar Styles --- */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.search-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 200px;
+    backdrop-filter: blur(5px);
+}
+
+.search-bar::placeholder {
+    color: #aaa;
+}
+
+/* Glows with the dynamic accent color when clicked */
+.search-bar:focus {
+    border-color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accent-color), transparent 70%);
+}
+
+/* --- Mobile Optimization Update --- */
+@media (max-width: 768px) {
+    /* Since nav is hidden on mobile, we'll hide the search bar here too 
+       to keep the header clean, or you can adjust it to sit below the logo */
+    /*.search-container {
+        display: none; 
+    }*/
 }
