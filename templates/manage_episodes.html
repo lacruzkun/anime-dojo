@@ -11,7 +11,7 @@
 
     <div class="dashboard-container">
         <aside class="sidebar">
-            <div class="logo">Filmquest <span>Admin</span></div>
+            <div class="logo">AnimeDojo <span>Admin</span></div>
             <nav>
                 <a href="{{ url_for('admin') }}">Series List</a>
                 <a href="{{ url_for('add_anime') }}">Add New Series</a>
@@ -31,7 +31,7 @@
             <section class="series-summary-card">
                 <img src="{{ anime.cover_image }}" alt="Poster" class="summary-poster">
                 <div class="summary-info">
-                    <p><strong>Total Episodes:</strong> {{ episodes|length }} / {{ anime.no_of_episodes }}</p>
+                    <p><strong>Total Episodes:</strong> {{ length }} / {{ anime.no_of_episodes }}</p>
                     <p><strong>Status:</strong> <span class="status-badge published">Active</span></p>
                 </div>
             </section>
@@ -55,14 +55,13 @@
                             <td><img src="{{ ep.thumbnail }}" class="table-thumb"></td>
                             <td>{{ ep.title }}</td>
                             <td>
-                                <!--<form method="POST" action="{{ url_for('toggle_episode_status', id=ep.id) }}">-->
-                                <form>
+                                <form method="POST" action="{{ url_for('toggle_episode_status', id=ep.id) }}">
                                     <button type="submit" class="status-toggle {{ 'active' if ep.is_uploaded else 'pending' }}">
                                         {{ 'Uploaded' if ep.is_uploaded else 'Not Uploaded' }}
                                     </button>
                                 </form>
                             </td>
-                            <td class="url-cell">{{ ep.video_url[:30] }}...</td>
+                            <td class="url-cell">{{ ep.file_path[:30] }}...</td>
                             <td>
                                 <div class="action-btns">
                                     <button class="edit-btn">Edit</button>
@@ -80,8 +79,7 @@
     <div id="uploadModal" class="modal">
         <div class="modal-content">
             <h3>Upload New Episode</h3>
-            <!--<form method="POST" action="{{ url_for('upload_episode', anime_id=anime.id) }}">-->
-            <form>
+            <form method="POST" action="{{ url_for('upload_episode', anime_id=anime.id) }}">
                 <div class="form-row">
                     <div class="input-group">
                         <label>Episode Number</label>
@@ -91,10 +89,6 @@
                         <label>Episode Title</label>
                         <input type="text" name="title" placeholder="e.g. The Beginning" required>
                     </div>
-                </div>
-                <div class="input-group">
-                    <label>Thumbnail URL</label>
-                    <input type="url" name="thumbnail" placeholder="https://...">
                 </div>
                 <div class="input-group">
                     <label>Video URL / File Path</label>

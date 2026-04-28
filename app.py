@@ -4,8 +4,10 @@ import requests
 import os
 import sqlite3
 
+
 load_dotenv
 app = Flask(__name__)
+app.jinja_env.globals['enumerate'] = enumerate
 app.secret_key = os.getenv("SECRET_KEY")
 
 DB = "anime.db"
@@ -79,12 +81,12 @@ def init_db():
          )"""
      )
 
-    conn.execute("""CREATE TABLE IF NOT EXISTS episode (
+    conn.execute("""CREATE TABLE IF NOT EXISTS episodes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         anime_id INTEGER NOT NULL,
         episode_number INTEGER NOT NULL,
         file_path TEXT,
-        added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        title TEXT,
         FOREIGN KEY (anime_id) REFERENCES anime(id) ON DELETE CASCADE,
         UNIQUE (anime_id, episode_number)
     )"""
@@ -226,16 +228,24 @@ def manage_episode(anime_id):
         return redirect(url_for("home"))
     conn = get_connection_db()
     anime = conn.execute("""SELECT * FROM anime WHERE id = ?""", (anime_id, )).fetchone()
+    episodes = conn.execute("""
+    SELECT * FROM episodes WHERE id = ?""", (anime_id, )).fetchall()
+    print(len(episodes))
     conn.close()
-    return render_template("manage_episodes.html", anime=anime)
+    return render_template("manage_episodes.html", anime=anime, episodes=episodes, length=len(episodes))
 
 @app.route("/anime/<int:anime_id>")
 def anime_detail(anime_id):
     conn = get_connection_db()
     anime = conn.execute("""SELECT * FROM anime WHERE id = ?""", (anime_id, )).fetchone()
     genres = conn.execute("""SELECT genres.name FROM genres JOIN anime_genre ON genres.id = anime_genre.genre_id WHERE anime_genre.anime_id = ?""", (anime["id"],)).fetchall()
+    episodes = conn.execute("""
+    SELECT * FROM episodes WHERE id = ?
+    """, (anime_id, )).fetchall()
+
+    print(episodes)
     conn.close()
-    return render_template("anime_details.html", anime=anime, genres=genres)
+    return render_template("anime_details.html", anime=anime, genres=genres, episodes=episodes)
 
 @app.route("/home_anime", methods=["GET", "POST"])
 def home_anime():
@@ -250,9 +260,25 @@ def home_anime():
 def toggle_episode_status():
     return "OK"
 
-@app.route("/admin/upload_episode", methods=["GET", "POST"])
-def upload_episode():
-    return "OK"
+@app.route("/admin/upload_episode<int:anime_id>", methods=["GET", "POST"])
+def upload_episode(anime_id):
+    if request.method == "POST":
+        episode_number = request.form.get("episode_number")
+        title = request.form.get("title")
+        path = request.form.get("video_url")
+        conn = get_connection_db()
+        try:
+            conn.execute("""
+            INSERT INTO episodes(anime_id, episode_number, file_path, title)
+            VALUES(?, ?, ?, ?)""", (anime_id, episode_number, path, title))
+            conn.commit()
+        except Exception as e:
+            print(e)
+
+        conn.close()
+
+        return redirect(url_for("manage_episode", anime_id=anime_id))
+
 
 if __name__ == "__main__":
     init_db()

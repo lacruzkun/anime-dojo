@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ anime.english_title }} | Filmquest</title>
+    <title>{{ anime.english_title }} | AnimeDojo</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='anime_details.css') }}">
 </head>
 <body style="--accent-color: {{ anime.color }};">
 
     <header class="navbar">
-        <div class="logo">Filmquest</div>
+        <div class="logo">AnimeDojo</div>
         <nav>
             <a href="/">Home</a>
             <a href="/movies">Movies</a>
@@ -69,22 +69,26 @@
                 </div>
                 
             <div class="episodes-list">
-                {% for i in range(1, 13) %}
-                <label class="ep-card" for="ep-{{ i }}">
-                    
-                    <div class="ep-select">
-                        <input type="checkbox" class="ep-checkbox" id="ep-{{ i }}">
-                    </div>
+                {% if episodes %}
+                    {% for i, ep in enumerate(episodes) %}
+                    <label class="ep-card" for="ep-{{ i }}">
+                        
+                        <div class="ep-select">
+                            <input type="checkbox" class="ep-checkbox" id="ep-{{ i }}">
+                        </div>
 
-                    <div class="ep-info">
-                        <span class="ep-num">Episode {{ i }}</span>
-                        <span class="ep-title">The Journey Begins</span>
-                    </div>
-                </label>
-                {% endfor %}
+                        <div class="ep-info">
+                            <span class="ep-num">Episode {{ i }}</span>
+                            <span class="ep-title">{{ ep.title }}</span>
+                        </div>
+                    </label>
+                    {% endfor %}
+                {% else %}
+                    <p> No episodes available yet </p>
+                {% endif %}
             </div>
 
-            <button class="download-btn">Download Selected</button></section>
+            <!--<button class="download-btn">Download Selected</button></section>-->
         </div>
     </main>
 

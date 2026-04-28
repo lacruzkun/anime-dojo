@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filmquest | Streaming UI</title>
+    <title>AnimeDojo | Streaming UI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
     <script src="{{ url_for('static', filename='htmx/htmx.min.js') }}"></script>
 </head>
 <body style="--accent-color: {{ anime.color }}; --bg-path: {{ anime['cover_image'] }};">
 
     <header class="navbar">
-        <div class="logo">Filmquest</div>
+        <div class="logo">AnimeDojo</div>
         <nav>
             <a href="#">Home</a>
             <a href="#">Movies</a>
@@ -41,11 +41,11 @@
             <div class="category-header">
                 <h2>Trending Now</h2>
                 <div class="tabs">
-                    <span class="active">Movies</span>
-                    <span>Series</span>
+                    <span id="series" class="active" onclick="switchSeriesMovies(this)">Series</span>
+                    <span id="movies" onclick="switchSeriesMovies(this)">Movies</span>
                 </div>
             </div>
-            <div class="grid" >
+            <div id="series_grid" class="grid" >
                 {% for result in results[:20] %}
                 <a href="{{ url_for('anime_detail', anime_id=result['id']) }}">
                     <div class="card">
@@ -68,4 +68,35 @@
     </main>
 
 </body>
+<script>
+    function switchSeriesMovies(e){
+        d = document.getElementById("series_grid");
+        series_stuff = `
+                {% for result in results[:20] %}
+                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}">
+                    <div class="card">
+                        <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
+                        <div class="card-info">
+                            <h3>{{ result['english_title'] }}</h3>
+                            <p>{{ result['year'] }} • HD</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+        `;
+
+        if (e.textContent == "Series") {
+            d.remove()
+            e.className = "active";
+            movies = document.getElementById("movies");
+            movies.className = "";
+            d.append(series_stuff);
+        }
+        else {
+            e.className = "active";
+            series = document.getElementById("series");
+            series.className = "";
+        }
+    }
+</script>
 </html>
