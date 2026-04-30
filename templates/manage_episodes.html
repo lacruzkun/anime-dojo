@@ -56,16 +56,18 @@
                             <td>{{ ep.title }}</td>
                             <td>
                                 <form method="POST" action="{{ url_for('toggle_episode_status', id=ep.id) }}">
-                                    <button type="submit" class="status-toggle {{ 'active' if ep.is_uploaded else 'pending' }}">
-                                        {{ 'Uploaded' if ep.is_uploaded else 'Not Uploaded' }}
+                                    <button type="submit" class="status-toggle active ">
+                                        Uploaded
                                     </button>
                                 </form>
                             </td>
-                            <td class="url-cell">{{ ep.file_path[:30] }}...</td>
+                            <td class="url-cell">{{ ep.file_path }}</td>
                             <td>
                                 <div class="action-btns">
-                                    <button class="edit-btn">Edit</button>
-                                    <button class="delete-btn">Delete</button>
+                                    <button class="edit-btn" onclick="toggleEditModal({{ ep.episode_number }})">Edit</button>
+                                    <form method="POST" action="{{ url_for('delete_episode', anime_id=anime.id, ep_id=ep.id) }}">
+                                        <button class="delete-btn">Delete</button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -102,9 +104,39 @@
         </div>
     </div>
 
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Episode</h3>
+            <form method="POST" action="{{ url_for('edit_episode', anime_id=anime.id) }}">
+                <input type="hidden" id="edit_episode_number" name="episode_number" value="">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Episode Title</label>
+                        <input type="text" name="title" placeholder="e.g. The Beginning" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Video URL / File Path</label>
+                    <input type="text" name="video_url" placeholder="Direct link to video source" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" onclick="toggleEditModal()">Cancel</button>
+                    <button type="submit" class="save-btn">Edit Episode</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         function toggleModal() {
             const modal = document.getElementById('uploadModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleEditModal(ep) {
+            const modal = document.getElementById('editModal');
+            const entry = document.getElementById('edit_episode_number')
+            entry.value = ep
             modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
         }
     </script>

@@ -67,30 +67,38 @@
                     <h2>Episodes</h2>
                     <span class="ep-total">Total: {{ anime.no_of_episodes }}</span>
                 </div>
-                
-            <div class="episodes-list">
-                {% if episodes %}
-                    {% for i, ep in enumerate(episodes) %}
-                    <label class="ep-card" for="ep-{{ i }}">
-                        
-                        <div class="ep-select">
-                            <input type="checkbox" class="ep-checkbox" id="ep-{{ i }}">
-                        </div>
+            <form method="POST"> 
+                <div class="episodes-list">
+                    {% if urls %}
+                        {% for url, ep in zip(urls, eps) %}
+                        <a href="{{ url.file_path }}">Episode {{ ep }}</a>
+                        {% endfor %}
 
-                        <div class="ep-info">
-                            <span class="ep-num">Episode {{ i }}</span>
-                            <span class="ep-title">{{ ep.title }}</span>
-                        </div>
-                    </label>
-                    {% endfor %}
-                {% else %}
-                    <p> No episodes available yet </p>
-                {% endif %}
-            </div>
+                    {% elif episodes %}
+                        {% for i, ep in enumerate(episodes, start=1) %}
+                        <label class="ep-card" for="ep-{{ i }}">
+                            
+                            <div class="ep-select">
+                                <input name="ep-{{ i }}" type="checkbox" class="ep-checkbox" id="ep-{{ i }}">
+                            </div>
 
-            <!--<button class="download-btn">Download Selected</button></section>-->
+                            <div class="ep-info">
+                                <span class="ep-num">Episode {{ i }}</span>
+                                <span class="ep-title">{{ ep.title }}</span>
+                            </div>
+                        </label>
+                        {% endfor %}
+                    {% else %}
+                        <p> No episodes available yet </p>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="download-btn">Download Selected</button></section>
+            </form>
         </div>
     </main>
 
 </body>
+<script>
+</script>
 </html>

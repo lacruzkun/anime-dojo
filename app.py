@@ -8,6 +8,7 @@ import sqlite3
 load_dotenv
 app = Flask(__name__)
 app.jinja_env.globals['enumerate'] = enumerate
+app.jinja_env.globals['zip'] = zip
 app.secret_key = os.getenv("SECRET_KEY")
 
 DB = "anime.db"
@@ -234,16 +235,35 @@ def manage_episode(anime_id):
     conn.close()
     return render_template("manage_episodes.html", anime=anime, episodes=episodes, length=len(episodes))
 
-@app.route("/anime/<int:anime_id>")
+@app.route("/anime/<int:anime_id>", methods=["GET", "POST"])
 def anime_detail(anime_id):
     conn = get_connection_db()
     anime = conn.execute("""SELECT * FROM anime WHERE id = ?""", (anime_id, )).fetchone()
-    genres = conn.execute("""SELECT genres.name FROM genres JOIN anime_genre ON genres.id = anime_genre.genre_id WHERE anime_genre.anime_id = ?""", (anime["id"],)).fetchall()
+    genres = conn.execute("""
+                  SELECT genres.name FROM genres 
+                  JOIN anime_genre ON genres.id = anime_genre.genre_id 
+                  WHERE anime_genre.anime_id = ?""", 
+                          (anime["id"],)).fetchall()
     episodes = conn.execute("""
-    SELECT * FROM episodes WHERE id = ?
+        SELECT * FROM episodes WHERE id = ?
     """, (anime_id, )).fetchall()
 
-    print(episodes)
+    if request.method == "POST":
+        eps = []
+        urls = []
+        q = request.form
+        for ep in q:
+            eps.append(ep.split("-")[1])
+
+        for ep in eps:
+            url = conn.execute("""
+            SELECT file_path FROM episodes 
+            WHERE anime_id = ? AND episode_number = ? """, 
+                               (anime_id, ep)).fetchone()
+            urls.append(url)
+
+        return render_template("anime_details.html", anime=anime, genres=genres, urls=urls, eps=eps)
+
     conn.close()
     return render_template("anime_details.html", anime=anime, genres=genres, episodes=episodes)
 
@@ -279,6 +299,48 @@ def upload_episode(anime_id):
 
         return redirect(url_for("manage_episode", anime_id=anime_id))
 
+
+@app.route("/admin/edit_episode<int:anime_id>", methods=["GET", "POST"])
+def edit_episode(anime_id):
+    if request.method == "POST":
+        episode = request.form.get("episode_number")
+        title = request.form.get("title")
+        path = request.form.get("video_url")
+        conn = get_connection_db()
+        try:
+            conn.execute("""
+            UPDATE  episodes SET 
+            file_path = ?, title = ? 
+            WHERE anime_id = ? AND episode_number = ?""", 
+                         (path, title, anime_id, episode))
+            print(episode)
+            conn.commit()
+        except Exception as e:
+            print(e)
+
+        conn.close()
+
+        return redirect(url_for("manage_episode", anime_id=anime_id))
+
+
+@app.route("/admin/delete_episode", methods=["GET", "POST"])
+def delete_episode(anime_id, ep_id):
+    if request.method == "POST":
+        conn = get_connection_db()
+        try:
+            conn.execute("""
+            UPDATE  episodes SET 
+            file_path = ?, title = ? 
+            WHERE anime_id = ? AND episode_number = ?""", 
+                         (path, title, anime_id, episode))
+            print(episode)
+            conn.commit()
+        except Exception as e:
+            print(e)
+
+        conn.close()
+
+        return redirect(url_for("manage_episode", anime_id=anime_id))
 
 if __name__ == "__main__":
     init_db()
