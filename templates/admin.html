@@ -38,7 +38,8 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                        {% for entry in entries %}
+
+                    {% for entry in entries %}
                     <tbody>
                         <tr onclick="window.location.href='{{ url_for('manage_episode', anime_id=entry['id']) }}'">
                             <td>
@@ -53,11 +54,11 @@
                             <td><span class="status-badge published">Published</span></td>
                             <td>
                                 <button class="edit-link">Edit</button>
-                                <button class="delete-link">Delete</button>
+                                <button onclick="" class="delete-link">Delete</button>
                             </td>
                         </tr>
-                        </tbody>
-                        {% endfor %}
+                    </tbody>
+                    {% endfor %}
                 </table>
             </section>
         </main>

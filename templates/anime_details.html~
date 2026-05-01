@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{ anime.english_title }} |
+    {{ anime.english_title }}
 {% endblock %}
 {% block link %}
     <link rel="stylesheet" href="{{ url_for('static', filename='anime_details.css') }}">
@@ -44,7 +44,7 @@
         <div class="left-col">
             <section class="synopsis">
                 <h2>Synopsis</h2>
-                <p>{{ anime.description | safe }}</p>
+                <p>{{ anime.description }}</p>
             </section>
         </div>
 

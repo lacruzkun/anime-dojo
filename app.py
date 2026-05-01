@@ -9,6 +9,7 @@ load_dotenv
 app = Flask(__name__)
 app.jinja_env.globals['enumerate'] = enumerate
 app.jinja_env.globals['zip'] = zip
+app.jinja_env.globals['len'] = len
 app.secret_key = os.getenv("SECRET_KEY")
 
 DB = "anime.db"
@@ -37,18 +38,48 @@ ID_QUERY = """query ($id: Int){
       }
       description
       genres
+      format
     }
   }
 }"""
 
+# get the popular anime by popularity to populate our database for testing purposes
+POPULAR_QUERY = """query {
+  Page(page: 1, perPage: 1) {
+    media(type: ANIME, sort: POPULARITY_DESC) {
+      id
+    }
+  }
+}"""
+
+GENRE_QUERY = """query {
+  GenreCollection
+}"""
+GENRES =[
+            ("Action",),
+            ("Adventure",),
+            ("Comedy",),
+            ("Drama",),
+            ("Ecchi",),
+            ("Fantasy",),
+            ("Hentai",),
+            ("Horror",),
+            ("Mahou Shoujo",),
+            ("Mecha",),
+            ("Music",),
+            ("Mystery",),
+            ("Psychological",),
+            ("Romance",),
+            ("Sci-Fi",),
+            ("Slice of Life",),
+            ("Sports",),
+            ("Supernatural",),
+            ("Thriller",),
+    ]
+
 @app.route("/", methods=["GET", "POST"])
 def home():
     conn = get_connection_db()
-    anime = conn.execute("""SELECT * FROM anime""").fetchone()
-    genres = conn.execute("""
-          SELECT genres.name FROM genres 
-          JOIN anime_genre ON genres.id = anime_genre.genre_id 
-          WHERE anime_genre.anime_id = ?""", (anime["id"],)).fetchone()
     slides = [conn.execute("""SELECT * FROM anime WHERE id = ?""", (11061,)).fetchone(),
     conn.execute("""SELECT * FROM anime WHERE id = ?""", (11757,)).fetchone(),
      conn.execute("""SELECT * FROM anime WHERE id = ?""", (20447,)).fetchone(),
@@ -56,7 +87,7 @@ def home():
     if request.method == "GET":
         results = conn.execute("""SELECT * FROM anime""").fetchall()
     conn.close()
-    return render_template("home.html", anime=anime, results=results, genres=genres, slides=slides)
+    return render_template("home.html", results=results, slides=slides)
 
 
 def get_connection_db():
@@ -78,7 +109,8 @@ def init_db():
             cover_image STRING,
             large_cover_image STRING,
             color STRING,
-            description STRING
+            description STRING,
+            format STRING
          )"""
      )
 
@@ -86,7 +118,10 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         anime_id INTEGER NOT NULL,
         episode_number INTEGER NOT NULL,
-        file_path TEXT,
+        file_path1 TEXT,
+        file_path2 TEXT,
+        file_path3 TEXT,
+        file_path4 TEXT,
         title TEXT,
         FOREIGN KEY (anime_id) REFERENCES anime(id) ON DELETE CASCADE,
         UNIQUE (anime_id, episode_number)
@@ -99,6 +134,9 @@ def init_db():
             name TEXT UNIQUE
         )
         """)
+
+    conn.executemany("""INSERT OR IGNORE INTO
+    genres(name) values(?)""", GENRES)
 
     conn.execute("""CREATE TABLE IF NOT EXISTS 
         anime_genre(
@@ -189,36 +227,47 @@ def save_series():
     score = request.form.get("score")
     episodes = request.form.get("episodes")
     description = request.form.get("description")
+    _format = request.form.get("format")
     genres = request.form.getlist("genre")
+
+    if color == "None":
+        color = "#202020"
+
     conn = get_connection_db()
-    conn.execute("""INSERT INTO anime(
-        id ,
-        english_title ,
-        japanese_title ,
-        native_title ,
-        year ,
-        score ,
-        no_of_episodes ,
-        cover_image ,
-        large_cover_image,
-        color ,
-        description) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-                id,
-                english_title, 
-                japanese_title,
-                native_title,
-                year,
-                score,
-                episodes,
-                cover_image,
-                large_cover_image,
-                color,
-                description))
-    for genre in genres:
-        conn.execute("""INSERT INTO anime_genre(
-            anime_id,
-            genre_id) values(?, ?)""", (id, genre))
+    try:
+        conn.execute("""INSERT INTO anime(
+            id ,
+            english_title ,
+            japanese_title ,
+            native_title ,
+            year ,
+            score ,
+            no_of_episodes ,
+            cover_image ,
+            large_cover_image,
+            color,
+            format,
+            description) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                    id,
+                    english_title, 
+                    japanese_title,
+                    native_title,
+                    year,
+                    score,
+                    episodes,
+                    cover_image,
+                    large_cover_image,
+                    color,
+                    _format,
+                    description))
+        for genre in genres:
+            conn.execute("""INSERT INTO anime_genre(
+                anime_id,
+                genre_id) values(?, ?)""", (id, genre))
+    except Exception as e:
+        print(e)
+
     conn.commit()
     conn.close()
     return redirect(url_for("admin"))
@@ -305,35 +354,35 @@ def edit_episode(anime_id):
     if request.method == "POST":
         episode = request.form.get("episode_number")
         title = request.form.get("title")
-        path = request.form.get("video_url")
+        path = request.form.getlist("video_url")
+        print("path: ", path)
         conn = get_connection_db()
-        try:
-            conn.execute("""
-            UPDATE  episodes SET 
-            file_path = ?, title = ? 
-            WHERE anime_id = ? AND episode_number = ?""", 
-                         (path, title, anime_id, episode))
-            print(episode)
-            conn.commit()
-        except Exception as e:
-            print(e)
+        #try:
+        #    conn.execute("""
+        #    UPDATE  episodes SET 
+        #    file_path = ?, title = ? 
+        #    WHERE anime_id = ? AND episode_number = ?""", 
+        #                 (path, title, anime_id, episode))
+        #    print(episode)
+        #    conn.commit()
+        #except Exception as e:
+        #    print(e)
 
         conn.close()
 
         return redirect(url_for("manage_episode", anime_id=anime_id))
 
 
-@app.route("/admin/delete_episode", methods=["GET", "POST"])
+@app.route("/admin/delete_episode<int:anime_id><int:ep_id>", methods=["GET", "POST"])
 def delete_episode(anime_id, ep_id):
     if request.method == "POST":
         conn = get_connection_db()
         try:
             conn.execute("""
-            UPDATE  episodes SET 
-            file_path = ?, title = ? 
-            WHERE anime_id = ? AND episode_number = ?""", 
-                         (path, title, anime_id, episode))
-            print(episode)
+            DELETE FROM  episodes
+            WHERE anime_id = ? AND id = ?""", 
+                         (anime_id, ep_id))
+            print(anime_id, ep_id)
             conn.commit()
         except Exception as e:
             print(e)
@@ -341,6 +390,20 @@ def delete_episode(anime_id, ep_id):
         conn.close()
 
         return redirect(url_for("manage_episode", anime_id=anime_id))
+
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    query = request.args.get("q", "").strip()
+    conn = get_connection_db()
+    results = conn.execute("""
+    SELECT * FROM anime
+    WHERE english_title like ? 
+    OR japanese_title like ? 
+    OR native_title like ?""", (f"%{query}%", f"%{query}%", f"%{query}%")).fetchall()
+    print(query)
+
+    conn.close()
+    return render_template("search.html", query=query, results=results)
 
 if __name__ == "__main__":
     init_db()

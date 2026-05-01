@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #0f0f0f;
+    color: #fff;
+    line-height: 1.6;
+}
+
+.logo { font-size: 1.5rem; font-weight: 800; color: #fff; }
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+}
+
+nav a {
+    color: #ccc;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+nav a:hover { color: #fff; }
+
+/* Custom additions for the Search Result page specifically */
+.category {
+    margin-bottom: 40px;
+}
+
+.category-header h2 {
+    font-size: 1.8rem;
+    border-left: 4px solid var(--accent-color);
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 8px;
+    transition: transform 0.3s;
+}
+
+.card:hover img {
+    transform: scale(1.05);
+}
+
+.card-info h3 {
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.card-info p {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* Ensure the navbar background doesn't clash with content */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* NEW: Ensures logo, nav, and search align vertically */
+    padding: 20px 5%;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+.grid {
+    a,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active {
+      text-decoration: none;
+      color: inherit;
+    }
+}
+
+/* --- Search Bar Styles --- */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.search-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 200px;
+    backdrop-filter: blur(5px);
+}
+
+.search-bar::placeholder {
+    color: #aaa;
+}
+
+/* Glows with the dynamic accent color when clicked */
+.search-bar:focus {
+    border-color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accent-color), transparent 70%);
+}
+
+main {
+    padding: 40px 5%;
+}
+
+@media (max-width: 768px) {
+    /* Since nav is hidden on mobile, we'll hide the search bar here too 
+       to keep the header clean, or you can adjust it to sit below the logo */
+
+    .navbar { padding: 15px 5%; }
+    nav { display: none; }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 20px;
+    }
+}

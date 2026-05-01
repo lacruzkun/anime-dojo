@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | AnimeDojo</title>
+    <!-- Assuming your CSS is stored in search_results.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+</head>
+<!-- The --accent-color variable can be set dynamically per result or as a site default -->
+<body style="--accent-color: #e74c3c;">
+
+    <header class="navbar">
+        <div class="logo">AnimeDojo</div>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/movies">Movies</a>
+            <a href="/series">Series</a>
+        </nav>
+        <div class="search-container">
+            <form action="/search" method="GET">
+                <input type="text" class="search-bar" name="q" placeholder="Search anime..." value="{{ query }}">
+            </form>
+        </div>
+    </header>
+
+    <main style="padding-top: 120px;"> <!-- Space for absolute navbar -->
+        <section class="category">
+            <div class="category-header">
+                <h2>Search Results for: <span style="color: var(--accent-color);">"{{ query }}"</span></h2>
+                <div class="tabs">
+                    <span class="active">All</span>
+                    <span>Series</span>
+                    <span>Movies</span>
+                </div>
+            </div>
+
+            <!-- Grid system from -->
+            <div class="grid">
+                {% for result in results %}
+                <a href="/anime/{{ result.id }}">
+                    <div class="card">
+                        <img loading="lazy" src="{{ result.cover_image }}" alt="{{ result.english_title }}">
+                        <div class="card-info">
+                            <!-- Title truncation logic from[cite: 4] -->
+                            <h3>{{ result.english_title[:25] + "..." if result.english_title|length > 25 else result.english_title }}</h3>
+                            <p>{{ result.year }} • ★ {{ result.score / 10 }} • HD</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+
+            <!-- Fallback if no results found -->
+            {% if not results %}
+            <div style="text-align: center; padding: 100px 0;">
+                <p style="color: #888; font-size: 1.2rem;">No titles found matching your search.</p>
+                <a href="/" class="play-btn" style="display: inline-block; margin-top: 20px; text-decoration: none;">Go Home</a>
+            </div>
+            {% endif %}
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,26 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeDojo | Streaming UI</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
-    <script src="{{ url_for('static', filename='htmx/htmx.min.js') }}"></script>
-</head>
-<body style="--accent-color: {{ anime.color }}; --bg-path: {{ anime['cover_image'] }};">
+{% extends "base.html" %}
 
-    <header class="navbar">
-        <div class="logo">AnimeDojo</div>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Movies</a>
-            <a href="#">Series</a>
-        </nav>
-        <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search anime...">
-        </div>
-    </header>
-
+{% block content %}
     <section class="hero-container">
         {% for slide in slides[:4] %}
         <div class="hero-slide" style="background-image: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.2)), url('{{ slide.large_cover_image }}')">
@@ -37,7 +17,7 @@
     </section>
 
     <main>
-        <section class="category">
+        <section class="category", id="category">
             <div class="category-header">
                 <h2>Trending Now</h2>
                 <div class="tabs">
@@ -47,6 +27,19 @@
             </div>
             <div id="series_grid" class="grid" >
                 {% for result in results[:20] %}
+                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}">
+                    <div class="card">
+                        <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
+                        <div class="card-info">
+                            <h3>{{ result['english_title'][:20] + "..." if len(result['english_title']) > 20 else result['english_title'] }}</h3>
+                            <p>{{ result['year'] }} • HD</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            <div id="movies_grid" class="grid" style="display: none;" >
+                {% for result in results[5:10] %}
                 <a href="{{ url_for('anime_detail', anime_id=result['id']) }}">
                     <div class="card">
                         <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
@@ -67,36 +60,23 @@
         </section>
     </main>
 
-</body>
 <script>
     function switchSeriesMovies(e){
-        d = document.getElementById("series_grid");
-        series_stuff = `
-                {% for result in results[:20] %}
-                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}">
-                    <div class="card">
-                        <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
-                        <div class="card-info">
-                            <h3>{{ result['english_title'] }}</h3>
-                            <p>{{ result['year'] }} • HD</p>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-        `;
-
+        c = document.getElementById("category");
+        s = document.getElementById("series_grid");
+        m = document.getElementById("movies_grid");
         if (e.textContent == "Series") {
-            d.remove()
+            s.style.display = "grid";
+            m.style.display = "none";
             e.className = "active";
-            movies = document.getElementById("movies");
-            movies.className = "";
-            d.append(series_stuff);
+            movies = document.getElementById("movies").className = "";
         }
         else {
+            m.style.display = "grid";
+            s.style.display = "none";
             e.className = "active";
-            series = document.getElementById("series");
-            series.className = "";
+            series = document.getElementById("series").className = "";
         }
     }
 </script>
-</html>
+{% endblock %}

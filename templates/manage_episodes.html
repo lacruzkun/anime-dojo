@@ -61,7 +61,10 @@
                                     </button>
                                 </form>
                             </td>
-                            <td class="url-cell">{{ ep.file_path }}</td>
+                            <td class="url-cell"><a href="{{ ep.file_path1 }}"> link 1 </a></td>
+                            <td class="url-cell"><a href="{{ ep.file_path2 }}"> link 2 </a></td>
+                            <td class="url-cell"><a href="{{ ep.file_path3 }}"> link 3 </a></td>
+                            <td class="url-cell"><a href="{{ ep.file_path4 }}"> link 4 </a></td>
                             <td>
                                 <div class="action-btns">
                                     <button class="edit-btn" onclick="toggleEditModal({{ ep.episode_number }})">Edit</button>
@@ -92,10 +95,12 @@
                         <input type="text" name="title" placeholder="e.g. The Beginning" required>
                     </div>
                 </div>
+                {% for i in range(1, 5) %}
                 <div class="input-group">
                     <label>Video URL / File Path</label>
                     <input type="text" name="video_url" placeholder="Direct link to video source" required>
                 </div>
+                {% endfor %}
                 <div class="modal-actions">
                     <button type="button" class="cancel-btn" onclick="toggleModal()">Cancel</button>
                     <button type="submit" class="save-btn">Upload Episode</button>
@@ -115,10 +120,12 @@
                         <input type="text" name="title" placeholder="e.g. The Beginning" required>
                     </div>
                 </div>
+                {% for i in range(1, 5) %}
                 <div class="input-group">
                     <label>Video URL / File Path</label>
                     <input type="text" name="video_url" placeholder="Direct link to video source" required>
                 </div>
+                {% endfor %}
                 <div class="modal-actions">
                     <button type="button" class="cancel-btn" onclick="toggleEditModal()">Cancel</button>
                     <button type="submit" class="save-btn">Edit Episode</button>

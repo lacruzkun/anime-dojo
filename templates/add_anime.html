@@ -67,9 +67,10 @@
                     <input type="hidden" name="large_cover_image" value="{{ anime_data.coverImage.extraLarge }}">
                     <input type="hidden" name="year" value="{{ anime_data.seasonYear }}">
                     <input type="hidden" name="score" value="{{ anime_data.averageScore }}">
-                    <input type="hidden" name="epidoses" value="{{ anime_data.episodes }}">
+                    <input type="hidden" name="episodes" value="{{ anime_data.episodes }}">
                     <input type="hidden" name="description" value="{{ anime_data.description }}">
                     <input type="hidden" name="genre" value="{{ anime_data.genres }}">
+                    <input type="hidden" name="format" value="{{ anime_data.format }}">
                     <div class="form-actions">
                         <button type="submit" class="save-btn">Confirm & Save to Database</button>
                         <a href="{{ url_for('add_anime') }}" >
