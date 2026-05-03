@@ -85,10 +85,12 @@ def home():
     conn.execute("""SELECT * FROM anime WHERE id = ?""", (11757,)).fetchone(),
      conn.execute("""SELECT * FROM anime WHERE id = ?""", (20447,)).fetchone(),
     conn.execute("""SELECT * FROM anime WHERE id = ?""", (21234,)).fetchone()]
+
+    trending = conn.execute("SELECT * FROM anime WHERE format = ? ORDER BY RANDOM() LIMIT 10", ("TV",)).fetchall()
     series = conn.execute("SELECT * FROM anime WHERE format = ?", ("TV",)).fetchall()
     movies = conn.execute("SELECT * FROM anime WHERE format = ?", ("MOVIE",)).fetchall()
     conn.close()
-    return render_template("home.html", series=series, movies=movies, slides=slides)
+    return render_template("home.html", series=series, trending=trending, movies=movies, slides=slides)
 
 
 def get_connection_db():

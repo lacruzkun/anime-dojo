@@ -280,6 +280,23 @@ nav a:hover { color: var(--accent-color); }
     .episodes-list { max-height: none; overflow-y: visible; }
 
     .banner-bg { filter: blur(8px) brightness(0.3); }
+
+    .download-btn {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        margin-top: 0;
+        border-radius: 0; /* Removing border radius makes it look like a native bottom app bar */
+        padding: 20px 15px; /* Slightly taller for a better touch target */
+        z-index: 1000; /* Ensures it stays above the episode list */
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6); /* Adds a shadow above the button to separate it from scrolling content */
+    }
+
+    /* 2. Add padding to the bottom of the form/section so the last episode isn't hidden behind the fixed button */
+    .episodes-section {
+        padding-bottom: 80px; 
+    }
 }
 
 @media (max-width: 480px) {
@@ -396,11 +413,3 @@ nav a:hover { color: var(--accent-color); }
     box-shadow: 0 0 10px color-mix(in srgb, var(--accent-color), transparent 70%);
 }
 
-/* --- Mobile Optimization Update --- */
-@media (max-width: 768px) {
-    /* Since nav is hidden on mobile, we'll hide the search bar here too 
-       to keep the header clean, or you can adjust it to sit below the logo */
-    /*.search-container {
-        display: none; 
-    }*/
-}

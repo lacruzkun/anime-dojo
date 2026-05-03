@@ -21,7 +21,7 @@
             <h2>Trending Now</h2>
             <div class="scroll-container">
                 <!-- Move the loop OUTSIDE so it creates multiple items -->
-                {% for result in series[:20] %}
+                {% for result in trending[:10] %}
                 <!-- Give the <a> tag a class to act as the scroll item -->
                 <a href="{{ url_for('anime_detail', anime_id=result['id']) }}" class="scroll-item-link">
                     <div class="card">

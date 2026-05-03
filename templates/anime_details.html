@@ -58,7 +58,7 @@
                 <div class="episodes-list">
                     {% if urls %}
                         {% for url, ep in zip(urls, eps) %}
-                        <a href="{{ url.file_path1 }}">Download Episode {{ ep }}</a>
+                        <a href="{{ url.file_path1 }}" target="_blank">Download Episode {{ ep }}</a>
                         {% endfor %}
 
                     {% elif episodes %}
