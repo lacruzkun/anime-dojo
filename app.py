@@ -483,6 +483,33 @@ def search_fetch():
         anime_data = get_animes_by_title(series_title)
         return render_template("search_id.html", anime_data=anime_data)
 
+@app.route("/admin/search", methods=["GET", "POST"])
+def admin_search():
+    query = request.args.get("q", "").strip()
+    print(query)
+    conn = get_connection_db()
+    animes = conn.execute("""
+    SELECT * FROM anime
+    WHERE english_title like ? 
+    OR japanese_title like ? 
+    OR native_title like ?""", (f"%{query}%", f"%{query}%", f"%{query}%")).fetchall()
+    print(query)
+
+    entries = []
+    for anime in animes:
+        genres = conn.execute("""
+                  SELECT genres.name FROM genres 
+                  JOIN anime_genre ON genres.id = anime_genre.genre_id 
+                  WHERE anime_genre.anime_id = ?""", (anime["id"],)).fetchall()
+        entry = dict(anime)
+        entry["genres"] = []
+        for genre in genres:
+            entry["genres"].append(genre["name"])
+        entries.append(entry)
+
+    conn.close()
+    return render_template("admin.html", entries=entries)
+
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
