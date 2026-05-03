@@ -20,9 +20,17 @@
         <main class="content">
             <header class="content-header">
                 <h1>Manage Series</h1>
-                <a href="{{ url_for('add_anime') }}">
-                <button class="add-btn">+ Add New Series</button>
-                </a>
+                <input type="search" class="add-btn">
+
+                <div>
+                    <a href="{{ url_for('search_id') }}">
+                        <button class="add-btn">Get id of new series</button>
+                    </a>
+
+                    <a href="{{ url_for('add_anime') }}">
+                        <button class="add-btn">+ Add New Series</button>
+                    </a>
+                </div>
             </header>
 
             <section class="table-wrapper">

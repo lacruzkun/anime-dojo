@@ -21,7 +21,7 @@ ADMIN = {
 
 ID_QUERY = """query ($id: Int){
   Page(page: 1, perPage: 1) {
-    media(id: $id type: ANIME, sort: POPULARITY_DESC) {
+    media(id: $id, type: ANIME, sort: POPULARITY_DESC) {
       id
       title {
         english
@@ -43,6 +43,25 @@ ID_QUERY = """query ($id: Int){
   }
 }"""
 
+TITLE_QUERY = """query($search: String) {
+    Page(page: 1, perPage: 20){
+        media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
+            id
+            title {
+                english
+                romaji
+                native
+            }
+            coverImage {
+                extraLarge
+                large
+                color
+            }
+            description
+        }
+    }
+}
+"""
 # get the popular anime by popularity to populate our database for testing purposes
 POPULAR_QUERY = """query {
   Page(page: 1, perPage: 1) {
@@ -169,6 +188,7 @@ def login():
 def admin():
     if "admin" not in session:
         return redirect(url_for("home"))
+
     entries = []
     conn = get_connection_db()
     animes = conn.execute("""SELECT * FROM anime""").fetchall()
@@ -189,6 +209,7 @@ def admin():
 def add_anime():
     if "admin" not in session:
         return redirect(url_for("home"))
+
     return render_template("add_anime.html")
 
 def get_anime_by_id(Id):
@@ -205,18 +226,35 @@ def get_anime_by_id(Id):
     data = response.json()
     return data["data"]["Page"]["media"][0]
 
+def get_animes_by_title(title):
+    response = requests.post(
+            ANILIST_URL,
+            json={
+                "query": TITLE_QUERY,
+                "variables": {"search": title}
+            },
+            timeout=10
+        )
+    response.raise_for_status()
+
+    data = response.json()
+    return data["data"]["Page"]["media"]
+
 @app.route("/admin/add/fetch", methods=["GET", "POST"])
 def fetch_preview():
     if "admin" not in session:
         return redirect(url_for("home"))
-    series_id = request.form.get("id")
-    anime_data = get_anime_by_id(series_id)
-    return render_template("add_anime.html", anime_data=anime_data)
+
+    if request.method == "POST":
+        series_id = request.form.get("id")
+        anime_data = get_anime_by_id(series_id)
+        return render_template("add_anime.html", anime_data=anime_data)
 
 @app.route("/admin/add/save", methods=["GET", "POST"])
 def save_series():
     if "admin" not in session:
         return redirect(url_for("home"))
+
     data = request.form.to_dict()
     print(data)
     id = request.form.get("id")
@@ -279,6 +317,7 @@ def save_series():
 def manage_episode(anime_id):
     if "admin" not in session:
         return redirect(url_for("home"))
+
     conn = get_connection_db()
     anime = conn.execute("""SELECT * FROM anime WHERE id = ?""", (anime_id, )).fetchone()
     episodes = conn.execute("""
@@ -331,10 +370,16 @@ def home_anime():
 
 @app.route("/admin/toggle_episode_status", methods=["GET", "POST"])
 def toggle_episode_status():
+    if "admin" not in session:
+        return redirect(url_for("home"))
+
     return "OK"
 
 @app.route("/admin/upload_episode<int:anime_id>", methods=["GET", "POST"])
 def upload_episode(anime_id):
+    if "admin" not in session:
+        return redirect(url_for("home"))
+
     if request.method == "POST":
         episode_number = request.form.get("episode_number")
         title = request.form.get("title")
@@ -360,6 +405,9 @@ def upload_episode(anime_id):
 
 @app.route("/admin/edit_episode<int:anime_id>", methods=["GET", "POST"])
 def edit_episode(anime_id):
+    if "admin" not in session:
+        return redirect(url_for("home"))
+
     if request.method == "POST":
         episode = request.form.get("episode_number")
         title = request.form.get("title")
@@ -384,6 +432,9 @@ def edit_episode(anime_id):
 
 @app.route("/admin/delete_episode<int:anime_id><int:ep_id>", methods=["GET", "POST"])
 def delete_episode(anime_id, ep_id):
+    if "admin" not in session:
+        return redirect(url_for("home"))
+
     if request.method == "POST":
         conn = get_connection_db()
         try:
@@ -413,6 +464,24 @@ def search():
 
     conn.close()
     return render_template("search.html", query=query, results=results)
+
+@app.route("/admin/searchid")
+def search_id():
+    if "admin" not in session:
+        return redirect(url_for("home"))
+
+    return render_template("search_id.html")
+
+@app.route("/admin/search/fetch", methods=["GET", "POST"])
+def search_fetch():
+    if "admin" not in session:
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+        series_title = request.form.get("title")
+        print(series_title)
+        anime_data = get_animes_by_title(series_title)
+        return render_template("search_id.html", anime_data=anime_data)
 
 if __name__ == "__main__":
     init_db()

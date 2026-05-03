@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeDojo Admin | Import Series</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='add_anime.css') }}">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo">AnimeDojo <span>Admin</span></div>
+            <nav>
+                <a href="{{ url_for('admin') }}">Series List</a>
+                <a href="#" class="active">Import New Series</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="content-header">
+                <h1>Search Anilist Database For ID</h1>
+                <p>Enter a title to fetch ID</p>
+            </header>
+
+            <form method="POST" action="{{ url_for('search_fetch') }}" class="search-section">
+                <div class="search-box">
+                    <input type="text" name="title" placeholder="Enter Series ID (e.g. 1535)" value="{{ anime_data.title if anime_data else '' }}" required>
+                    <button type="submit" class="fetch-btn">Fetch Data</button>
+                </div>
+            </form>
+
+            {% if anime_data %}
+            {% for anime in anime_data %}
+                <div class="preview-container">
+                    <div class="preview-card">
+                        <div class="preview-image">
+                            <img src="{{ anime.coverImage.large }}" alt="Cover Preview">
+                        </div>
+                        <div class="preview-details">
+                            <span class="preview-badge" style="background: {{ anime.coverImage.color }}">{{ anime.id }}</span>
+                            <h2>{{ anime.title.english }}</h2>
+                            <p class="japanese-titles">{{ anime.title.japanese }} • {{ anime.title.native }}</p>
+                            
+                            <div class="preview-stats">
+                                <span><strong>Year:</strong> {{ anime.seasonYear }}</span>
+                                <span><strong>Score:</strong> {{ anime.averageScore }} /100</span>
+                                <span><strong>Episodes:</strong> {{ anime.episodes }}</span>
+                            </div>
+                            
+                            <p class="preview-description">{{ anime.description[:200] }}...</p>
+                            
+                            <div class="preview-genres">
+                                {% for g in anime.genres %}
+                                    <span class="tag">{{ g }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+            {% endif %}
+        </main>
+    </div>
+
+</body>
+</html>
