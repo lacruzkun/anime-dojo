@@ -5,7 +5,7 @@ import os
 import sqlite3
 
 
-load_dotenv
+load_dotenv()
 app = Flask(__name__)
 app.jinja_env.globals['enumerate'] = enumerate
 app.jinja_env.globals['zip'] = zip
