@@ -141,31 +141,6 @@ nav a:hover { color: var(--accent-color); }
 /* --- Actions --- */
 .actions { margin-top: 30px; display: flex; gap: 15px; }
 
-.play-btn {
-    background: var(--accent-color);
-    color: var(--text-on-accent); /* Ensures text is readable on the accent */
-    padding: 12px 35px;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s, filter 0.2s;
-}
-
-.play-btn:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-}
-
-.list-btn {
-    background: rgba(255,255,255,0.15);
-    color: #fff;
-    padding: 12px 35px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    backdrop-filter: blur(5px);
-}
 
 /* --- Main Content Area --- */
 .details-container {
@@ -290,8 +265,8 @@ nav a:hover { color: var(--accent-color); }
 .download-btn {
     display: none;
     width: 100%;
-    background: #2050ea;
-    color: var(--text-on-accent);
+    background: var(--accent-color);
+    color: contrast-color(var(--accent-color));
     padding: 15px;
     margin-top: 20px;
     border: none;
