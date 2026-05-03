@@ -95,10 +95,14 @@
                         <input type="text" name="title" placeholder="e.g. The Beginning" required>
                     </div>
                 </div>
-                {% for i in range(1, 5) %}
                 <div class="input-group">
                     <label>Video URL / File Path</label>
                     <input type="text" name="video_url" placeholder="Direct link to video source" required>
+                </div>
+                {% for i in range(1, 4) %}
+                <div class="input-group">
+                    <label>Video URL / File Path</label>
+                    <input type="text" name="video_url" placeholder="Direct link to video source">
                 </div>
                 {% endfor %}
                 <div class="modal-actions">

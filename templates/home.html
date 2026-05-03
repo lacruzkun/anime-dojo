@@ -17,30 +17,13 @@
     </section>
 
     <main>
-        <section class="category", id="category">
-            <div class="category-header">
-                <h2>Trending Now</h2>
-                <div class="tabs">
-                    <span id="series" class="active" onclick="switchSeriesMovies(this)">Series</span>
-                    <span id="movies" onclick="switchSeriesMovies(this)">Movies</span>
-                </div>
-            </div>
-            <div id="series_grid" class="grid" >
-                {% for result in results[:20] %}
-                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}">
-                    <div class="card">
-                        <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
-                        <div class="card-info">
-                            <h3>{{ result['english_title'][:20] + "..." if len(result['english_title']) > 20 else result['english_title'] }}</h3>
-                            <p>{{ result['year'] }} • HD</p>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-            <div id="movies_grid" class="grid" style="display: none;" >
-                {% for result in results[5:10] %}
-                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}">
+        <section class="scroll-category">
+            <h2>Trending Now</h2>
+            <div class="scroll-container">
+                <!-- Move the loop OUTSIDE so it creates multiple items -->
+                {% for result in series[:20] %}
+                <!-- Give the <a> tag a class to act as the scroll item -->
+                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}" class="scroll-item-link">
                     <div class="card">
                         <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
                         <div class="card-info">
@@ -53,6 +36,42 @@
             </div>
         </section>
 
+        <section class="scroll-category">
+            <h2>Series</h2>
+            <div class="scroll-container">
+                <!-- Move the loop OUTSIDE so it creates multiple items -->
+                {% for result in series[:20] %}
+                <!-- Give the <a> tag a class to act as the scroll item -->
+                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}" class="scroll-item-link">
+                    <div class="card">
+                        <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
+                        <div class="card-info">
+                            <h3>{{ result['english_title'] }}</h3>
+                            <p>{{ result['year'] }} • HD</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+        <section class="scroll-category">
+            <h2>Movies</h2>
+            <div class="scroll-container">
+                <!-- Move the loop OUTSIDE so it creates multiple items -->
+                {% for result in movies[:20] %}
+                <!-- Give the <a> tag a class to act as the scroll item -->
+                <a href="{{ url_for('anime_detail', anime_id=result['id']) }}" class="scroll-item-link">
+                    <div class="card">
+                        <img loading="lazy" src="{{ result['cover_image'] }}" alt="Poster">
+                        <div class="card-info">
+                            <h3>{{ result['english_title'] }}</h3>
+                            <p>{{ result['year'] }} • HD</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
         <section class="category">
             <h2>Recently Updated</h2>
             <div class="grid">
@@ -60,23 +79,4 @@
         </section>
     </main>
 
-<script>
-    function switchSeriesMovies(e){
-        c = document.getElementById("category");
-        s = document.getElementById("series_grid");
-        m = document.getElementById("movies_grid");
-        if (e.textContent == "Series") {
-            s.style.display = "grid";
-            m.style.display = "none";
-            e.className = "active";
-            movies = document.getElementById("movies").className = "";
-        }
-        else {
-            m.style.display = "grid";
-            s.style.display = "none";
-            e.className = "active";
-            series = document.getElementById("series").className = "";
-        }
-    }
-</script>
 {% endblock %}

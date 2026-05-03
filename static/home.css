@@ -88,7 +88,23 @@ main {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
 }
+/* behaves like the grid when in desktop */
+.scroll-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
 .grid {
+    a,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active {
+      text-decoration: none;
+      color: inherit;
+    }
+}
+.scroll-container {
     a,
     a:link,
     a:visited,
@@ -289,5 +305,35 @@ nav a:hover { color: var(--accent-color); }
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 20px;
+    }
+    /* --- Horizontal Scroll Container --- */
+    .scroll-container {
+        display: flex;            /* Switches to flexbox for better alignment */
+        overflow-x: auto;         /* Enables horizontal scrolling */
+        gap: 20px;                /* Applies space between items */
+        padding-bottom: 15px;     /* Prevents scrollbar from clipping cards */
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    /* Target the anchor tags we updated in the HTML */
+    .scroll-item-link {
+        flex: 0 0 auto;           /* CRITICAL: Prevents items from shrinking */
+        width: 160px;             /* Sets a fixed width for your cards */
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Custom Scrollbar for horizontal scrolling */
+    .scroll-container::-webkit-scrollbar {
+        height: 8px; 
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+        background: #080808; 
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+        background: var(--accent-color); 
+        border-radius: 10px;
     }
 }

@@ -55,6 +55,7 @@ POPULAR_QUERY = """query {
 GENRE_QUERY = """query {
   GenreCollection
 }"""
+
 GENRES =[
             ("Action",),
             ("Adventure",),
@@ -84,10 +85,10 @@ def home():
     conn.execute("""SELECT * FROM anime WHERE id = ?""", (11757,)).fetchone(),
      conn.execute("""SELECT * FROM anime WHERE id = ?""", (20447,)).fetchone(),
     conn.execute("""SELECT * FROM anime WHERE id = ?""", (21234,)).fetchone()]
-    if request.method == "GET":
-        results = conn.execute("""SELECT * FROM anime""").fetchall()
+    series = conn.execute("SELECT * FROM anime WHERE format = ?", ("TV",)).fetchall()
+    movies = conn.execute("SELECT * FROM anime WHERE format = ?", ("MOVIE",)).fetchall()
     conn.close()
-    return render_template("home.html", results=results, slides=slides)
+    return render_template("home.html", series=series, movies=movies, slides=slides)
 
 
 def get_connection_db():
@@ -279,7 +280,7 @@ def manage_episode(anime_id):
     conn = get_connection_db()
     anime = conn.execute("""SELECT * FROM anime WHERE id = ?""", (anime_id, )).fetchone()
     episodes = conn.execute("""
-    SELECT * FROM episodes WHERE id = ?""", (anime_id, )).fetchall()
+    SELECT * FROM episodes WHERE anime_id = ?""", (anime_id, )).fetchall()
     print(len(episodes))
     conn.close()
     return render_template("manage_episodes.html", anime=anime, episodes=episodes, length=len(episodes))
@@ -294,7 +295,7 @@ def anime_detail(anime_id):
                   WHERE anime_genre.anime_id = ?""", 
                           (anime["id"],)).fetchall()
     episodes = conn.execute("""
-        SELECT * FROM episodes WHERE id = ?
+        SELECT * FROM episodes WHERE anime_id = ?
     """, (anime_id, )).fetchall()
 
     if request.method == "POST":
@@ -306,10 +307,11 @@ def anime_detail(anime_id):
 
         for ep in eps:
             url = conn.execute("""
-            SELECT file_path FROM episodes 
+            SELECT file_path1 FROM episodes 
             WHERE anime_id = ? AND episode_number = ? """, 
                                (anime_id, ep)).fetchone()
             urls.append(url)
+        print(urls)
 
         return render_template("anime_details.html", anime=anime, genres=genres, urls=urls, eps=eps)
 
@@ -334,15 +336,20 @@ def upload_episode(anime_id):
     if request.method == "POST":
         episode_number = request.form.get("episode_number")
         title = request.form.get("title")
-        path = request.form.get("video_url")
+        path = request.form.getlist("video_url")
+
         conn = get_connection_db()
-        try:
-            conn.execute("""
-            INSERT INTO episodes(anime_id, episode_number, file_path, title)
-            VALUES(?, ?, ?, ?)""", (anime_id, episode_number, path, title))
-            conn.commit()
-        except Exception as e:
-            print(e)
+        conn.execute("""
+        INSERT INTO episodes(
+        anime_id, 
+        episode_number, 
+        file_path1, 
+        file_path2, 
+        file_path3, 
+        file_path4, 
+        title)
+        VALUES(?, ?, ?, ?, ?, ?, ?)""", (anime_id, episode_number, path[0], path[1], path[2], path[3], title))
+        conn.commit()
 
         conn.close()
 
