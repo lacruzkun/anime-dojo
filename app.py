@@ -273,7 +273,7 @@ def save_series():
 
     conn.commit()
     conn.close()
-    return redirect(url_for("admin"))
+    return redirect(url_for("add_anime"))
 
 @app.route("/admin/anime/<int:anime_id>")
 def manage_episode(anime_id):

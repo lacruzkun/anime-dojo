@@ -236,6 +236,119 @@ nav a:hover { color: var(--accent-color); }
 .ep-num { display: block; color: var(--accent-color); font-size: 0.8rem; font-weight: bold; }
 .ep-title { font-weight: 500; font-size: 0.95rem; }
 
+/* --- Episodes Checkbox & Alignment --- */
+.ep-card {
+    /* Existing styles are fine, but ensure vertical centering */
+    align-items: center; 
+}
+
+/* Container for the checkbox */
+.ep-select {
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+}
+
+/* Customizing the checkbox to match the theme */
+.ep-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover state for the checkbox */
+.ep-checkbox:hover {
+    border-color: var(--accent-color);
+}
+
+/* Checked state */
+.ep-checkbox:checked {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+/* The checkmark icon inside the custom box */
+.ep-checkbox:checked::after {
+    content: "✔";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-on-accent);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* --- Download Button --- */
+.download-btn {
+    display: none;
+    width: 100%;
+    background: #2050ea;
+    color: var(--text-on-accent);
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+form:has(.ep-checkbox:checked) .download-btn {
+    display: block;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* --- Mobile Fix for Checkboxes --- */
+@media (max-width: 480px) {
+    .ep-select {
+        padding-bottom: 10px; /* Gives some spacing when stacked on very small screens */
+    }
+}
+/* --- Search Bar Styles --- */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.search-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 200px;
+    backdrop-filter: blur(5px);
+}
+
+.search-bar::placeholder {
+    color: #aaa;
+}
+
+/* Glows with the dynamic accent color when clicked */
+.search-bar:focus {
+    border-color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accent-color), transparent 70%);
+}
+
 /* --- Mobile Optimization --- */
 @media (max-width: 768px) {
     .navbar { padding: 15px 5%; }
@@ -293,6 +406,10 @@ nav a:hover { color: var(--accent-color); }
         box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6); /* Adds a shadow above the button to separate it from scrolling content */
     }
 
+    form:has(.ep-checkbox:checked) .download-btn {
+        display: block;
+    }
+
     /* 2. Add padding to the bottom of the form/section so the last episode isn't hidden behind the fixed button */
     .episodes-section {
         padding-bottom: 80px; 
@@ -305,111 +422,3 @@ nav a:hover { color: var(--accent-color); }
     .ep-thumb { width: 100%; }
     .ep-thumb img { height: 180px; object-fit: cover; }
 }
-/* --- Episodes Checkbox & Alignment --- */
-.ep-card {
-    /* Existing styles are fine, but ensure vertical centering */
-    align-items: center; 
-}
-
-/* Container for the checkbox */
-.ep-select {
-    display: flex;
-    align-items: center;
-    padding: 0 5px;
-}
-
-/* Customizing the checkbox to match the theme */
-.ep-checkbox {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    background-color: transparent;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.2s ease-in-out;
-}
-
-/* Hover state for the checkbox */
-.ep-checkbox:hover {
-    border-color: var(--accent-color);
-}
-
-/* Checked state */
-.ep-checkbox:checked {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
-}
-
-/* The checkmark icon inside the custom box */
-.ep-checkbox:checked::after {
-    content: "✔";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--text-on-accent);
-    font-size: 14px;
-    font-weight: bold;
-}
-
-/* --- Download Button --- */
-.download-btn {
-    width: 100%;
-    background: var(--accent-color);
-    color: var(--text-on-accent);
-    padding: 15px;
-    margin-top: 20px;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s, filter 0.2s;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.download-btn:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-}
-
-/* --- Mobile Fix for Checkboxes --- */
-@media (max-width: 480px) {
-    .ep-select {
-        padding-bottom: 10px; /* Gives some spacing when stacked on very small screens */
-    }
-}
-/* --- Search Bar Styles --- */
-.search-container {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
-}
-
-.search-bar {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    outline: none;
-    transition: all 0.3s ease;
-    width: 200px;
-    backdrop-filter: blur(5px);
-}
-
-.search-bar::placeholder {
-    color: #aaa;
-}
-
-/* Glows with the dynamic accent color when clicked */
-.search-bar:focus {
-    border-color: var(--accent-color);
-    background: rgba(0, 0, 0, 0.6);
-    box-shadow: 0 0 10px color-mix(in srgb, var(--accent-color), transparent 70%);
-}
-
